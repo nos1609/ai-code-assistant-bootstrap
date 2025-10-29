@@ -1,0 +1,9 @@
+# После копирования шаблона уберите решётки со строк ниже,
+# чтобы приватные инструкции не попали в систему контроля версий.
+# Uncomment entries below after copying the template into your project
+# to keep private instructions out of version control.
+
+# AGENTS.md
+# local/
+# .github/copilot-instructions.md
+# .gemini/GEMINI.md
