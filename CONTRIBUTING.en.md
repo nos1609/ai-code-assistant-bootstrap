@@ -25,7 +25,7 @@ Recommended workflow:
 - Optional second paragraph in Russian for nuances.
 
 ## Testing
-- Before PR: `./scripts/terraform.sh plan` and `./generate_ks.sh --config config.yaml --skip-http-upload`.
+- Run all relevant local checks (linters, tests, etc.) before submitting a PR.
 - Linters and basic checks run in CI.
 
 Thank you!
