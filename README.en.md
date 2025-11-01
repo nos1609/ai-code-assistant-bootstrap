@@ -19,6 +19,7 @@ The ai-code-assistant-bootstrap pack includes:
 - [README.md](README.md) / [README.en.md](README.en.md) — quick overview in Russian and English with the ready-to-use hidden HTML snippet.
 - [AGENTS.md](AGENTS.md) — shared instruction set reflecting local workflow preferences, containing instructions for `gemini`, `qwen`, and `codex`; it requires asking for the user’s preferred grammatical gender in the first reply.
 - [local/chat_context.md](local/chat_context.md) — template that captures agreements for each assistant session.
+- [local/project_addenda.md](local/project_addenda.md) — empty project addenda template; fill it only when the team defines additional rules.
 - [README_snippet.md](README_snippet.md) — source of the HTML comment in case you need to re-use it.
 - [scripts/init.sh](scripts/init.sh) — helper script that prepares symlinks and populates `.gitignore`.
 - [.gitignore](.gitignore) — defaults that hide [AGENTS.md](AGENTS.md), [local/](local/), and agent-specific symlinks (the entries are commented out by default; they should be uncommented during setup or handled via `./scripts/init.sh`).
@@ -42,8 +43,8 @@ The directory is copied into the target repository, after which [local/chat_cont
 1. Clone or copy this template into the target repository.
 2. Run `./scripts/init.sh` to create the symlinks and update [.gitignore](.gitignore); afterwards confirm the entries for `AGENTS.md`, `local/`, and the symlinks are uncommented.
 3. Verify that the symlinks [.github/copilot-instructions.md](.github/copilot-instructions.md), [.gemini/GEMINI.md](.gemini/GEMINI.md), [GEMINI.md](GEMINI.md), and [QWEN.md](QWEN.md) exist in the workspace, each pointing back to [AGENTS.md](AGENTS.md).
-4. Populate [local/chat_context.md](local/chat_context.md) with current data (date, agreements, checks).
+4. Populate [local/chat_context.md](local/chat_context.md) with current data (date, agreements, checks); capture any project-specific rules in [local/project_addenda.md](local/project_addenda.md).
 5. Confirm that the new repository’s README retains the hidden HTML comment (the snippet appears at the top of this file; it can also be copied from [README_snippet.md](README_snippet.md)).
-6. Review [AGENTS.md](AGENTS.md) and, if needed, coordinate additional rules with the team.
+6. Review [AGENTS.md](AGENTS.md) and, if needed, coordinate additional rules with the team, recording them in [local/project_addenda.md](local/project_addenda.md) when appropriate.
 
 Before introducing changes, consult [CONTRIBUTING.md](CONTRIBUTING.md) and [CONTRIBUTING.en.md](CONTRIBUTING.en.md) to keep the bilingual documentation aligned.

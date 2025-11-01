@@ -15,6 +15,8 @@ This file records the key agreements for the current session. It stays local and
 
 ## Рабочие договорённости
 ## Working agreements
+- Логирование включено по умолчанию: после подтверждения языка и рода делай записи в `local/<имя ассистента>/sessions.log`, подробности обращений храни в этой же папке. Здесь же отмечай, если пользователь запретил точные метки времени или детальное логирование.
+  Logging is enabled by default: after confirming language and gender, record entries in `local/<assistant-name>/sessions.log` and keep request details in that folder. Use this section to note if the user disallows precise timestamps or detailed logging.
 - (Здесь фиксируются уникальные договорённости, возникшие в ходе сессии, которые дополняют или уточняют [AGENTS.md](../AGENTS.md).)
   (Log unique agreements from the session that complement or refine [AGENTS.md](../AGENTS.md).)
 

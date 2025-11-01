@@ -27,6 +27,7 @@ Additionally, review symlinks [.github/copilot-instructions.md](.github/copilot-
 - [README.md](README.md) / [README.en.md](README.en.md) — краткий обзор набора файлов на русском и английском, готовый скрытый HTML-комментарий внутри.
 - [AGENTS.md](AGENTS.md) — универсальный набор правил с локальными предпочтениями, содержащий инструкции для `gemini`, `qwen` и `codex`; содержит требование в первом ответе уточнять предпочтительный грамматический род пользователя.
 - [local/chat_context.md](local/chat_context.md) — заготовка контекста чата для фиксации договорённостей.
+- [local/project_addenda.md](local/project_addenda.md) — пустой шаблон для проектных дополнений; заполняется только при наличии специфических правил.
 - [README_snippet.md](README_snippet.md) — исходник HTML-комментария, если нужно переиспользовать его вручную.
 - [scripts/init.sh](scripts/init.sh) — скрипт для развёртывания симлинков и заполнения `.gitignore`.
 - [.gitignore](.gitignore) — заготовка для скрытия [AGENTS.md](AGENTS.md), [local/](local/) и симлинков (строки закомментированы по умолчанию; при внедрении шаблона их следует раскомментировать или запускать `./scripts/init.sh`).
@@ -50,8 +51,8 @@ Additionally, review symlinks [.github/copilot-instructions.md](.github/copilot-
 1. Клонировать или скопировать шаблон в целевой репозиторий.
 2. Выполнить `./scripts/init.sh`, чтобы создать симлинки и обновить [.gitignore](.gitignore); после запуска убедиться, что строки для `AGENTS.md`, `local/` и симлинков действительно раскомментированы.
 3. Проверить наличие симлинков в корне: [.github/copilot-instructions.md](.github/copilot-instructions.md), [.gemini/GEMINI.md](.gemini/GEMINI.md), [GEMINI.md](GEMINI.md), [QWEN.md](QWEN.md); каждый из них должен указывать на [AGENTS.md](AGENTS.md).
-4. Заполнить актуальные данные в [local/chat_context.md](local/chat_context.md) (дата, договорённости, проверки).
+4. Заполнить актуальные данные в [local/chat_context.md](local/chat_context.md) (дата, договорённости, проверки); при наличии специфики проекта зафиксировать её в [local/project_addenda.md](local/project_addenda.md).
 5. Убедиться, что README нового репозитория содержит скрытый HTML-комментарий (подсказка расположена в начале файла; при необходимости скопировать фрагмент из [README_snippet.md](README_snippet.md)).
-6. Ознакомиться с [AGENTS.md](AGENTS.md) и согласовать дополнительные правила с командой при необходимости.
+6. Ознакомиться с [AGENTS.md](AGENTS.md) и согласовать дополнительные правила с командой; при необходимости дополнить их в [local/project_addenda.md](local/project_addenda.md).
 
 Перед изменениями рекомендуется изучить [CONTRIBUTING.md](CONTRIBUTING.md) и [CONTRIBUTING.en.md](CONTRIBUTING.en.md), чтобы поддерживать двуязычную документацию в актуальном состоянии.

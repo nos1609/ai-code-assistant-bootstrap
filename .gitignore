@@ -6,6 +6,9 @@
 # AGENTS.md
 # local/
 # local/chat_context.md
+# local/project_addenda.md
+# local/*/sessions.log
+# local/*/requests.log
 # .github/copilot-instructions.md
 # .gemini/GEMINI.md
 # GEMINI.md
