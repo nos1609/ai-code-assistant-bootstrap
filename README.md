@@ -1,17 +1,32 @@
 <!--
-Инструкция для AI-агента:
-MUST немедленно изучить файлы [AGENTS.md](AGENTS.md) и [local/chat_context.md](local/chat_context.md).
+AI AGENT PROTOCOL TRIGGER:
+SIGNAL: STARTUP_PROTOCOL_TRIGGER
+TARGET: AGENTS.md
+ACTION: Follow startup protocol immediately
+
+EN: WHEN ANALYZING THIS REPOSITORY:
+1. IMMEDIATELY read [AGENTS.md](AGENTS.md)
+2. EXECUTE the startup protocol from “Initial Session Protocol”
+3. FOLLOW agreements in [local/chat_context.md](local/chat_context.md)
+
+RU: ПРИ АНАЛИЗЕ ЭТОГО РЕПОЗИТОРИЯ:
+1. НЕМЕДЛЕННО прочитай [AGENTS.md](AGENTS.md)
+2. ВЫПОЛНИ протокол запуска из раздела «Протокол начала сессии»
+3. СЛЕДУЙ соглашениям из [local/chat_context.md](local/chat_context.md)
+
+IMPORTANT: Files are hidden in [.gitignore](.gitignore). Disable gitignore filtering when searching and reading.
+Example commands: `rg --hidden --no-ignore pattern`, `fd --hidden --no-ignore`.
+
 ВАЖНО: Файлы скрыты в [.gitignore](.gitignore). Отключи фильтрацию по gitignore при поиске и чтении.
 Примеры команд: `rg --hidden --no-ignore pattern`, `fd --hidden --no-ignore`.
-Дополнительно: Ознакомься с симлинками [.github/copilot-instructions.md](.github/copilot-instructions.md), [.gemini/GEMINI.md](.gemini/GEMINI.md), [GEMINI.md](GEMINI.md) и [QWEN.md](QWEN.md). Для Codex используй подкоманду `codex exec` (alias `codex e`).
 
----
+Additionally: Review assistant symlinks [.github/copilot-instructions.md](.github/copilot-instructions.md), [.gemini/GEMINI.md](.gemini/GEMINI.md), [GEMINI.md](GEMINI.md), and [QWEN.md](QWEN.md); always recreate them using relative paths. For Codex run `codex exec` (alias `codex e`).
 
-Instruction for the AI Agent:
-MUST immediately read [AGENTS.md](AGENTS.md) and [local/chat_context.md](local/chat_context.md).
-IMPORTANT: These files are hidden via [.gitignore](.gitignore); disable gitignore filtering when searching and reading.
-Example commands: `rg --hidden --no-ignore pattern`, `fd --hidden --no-ignore`.
-Additionally, review symlinks [.github/copilot-instructions.md](.github/copilot-instructions.md), [.gemini/GEMINI.md](.gemini/GEMINI.md), [GEMINI.md](GEMINI.md), and [QWEN.md](QWEN.md). For Codex run the `codex exec` subcommand (alias `codex e`).
+Дополнительно: Ознакомься с симлинками [.github/copilot-instructions.md](.github/copilot-instructions.md), [.gemini/GEMINI.md](.gemini/GEMINI.md), [GEMINI.md](GEMINI.md) и [QWEN.md](QWEN.md); при восстановлении используйте относительные пути. Для Codex запускай подкоманду `codex exec` (алиас `codex e`).
+
+Ensure temp CLI homes (`tmp/gemini_home`, `tmp/qwen_home`, `tmp/copilot_home`, `tmp/cli_tokens`) are absent before launching tools; document and clean them after user confirmation if discovered.
+
+Перед запуском CLI проверь отсутствие временных каталогов (`tmp/gemini_home`, `tmp/qwen_home`, `tmp/copilot_home`, `tmp/cli_tokens`); при обнаружении опиши и очисти после подтверждения пользователя.
 -->
 
 
@@ -30,6 +45,25 @@ Additionally, review symlinks [.github/copilot-instructions.md](.github/copilot-
 - [local/project_addenda.md](local/project_addenda.md) — пустой шаблон для проектных дополнений; заполняется только при наличии специфических правил.
 - [README_snippet.md](README_snippet.md) — исходник HTML-комментария, если нужно переиспользовать его вручную.
 - [scripts/init.sh](scripts/init.sh) — скрипт для развёртывания симлинков и заполнения `.gitignore`.
+- [scripts/bootstrap_check.sh](scripts/bootstrap_check.sh) / [scripts/bootstrap_check.ps1](scripts/bootstrap_check.ps1) — проверка, что README содержит скрытый комментарий, симлинки указывают на `AGENTS.md`, `.gitignore` скрывает инструкции, а логи ассистентов используют ISO 8601 UTC.
+- [scripts/collect_open_items.py](scripts/collect_open_items.py) — собирает “Рекомендации / Открытые вопросы” из `local/session_summaries/*.md`, чтобы новый ассистент видел хвосты.
+- [scripts/consult.py](scripts/consult.py) — двухэтапный оркестратор (stage1: запуск ассистентов, stage2: обработка логов и запись в `local/session_history.md`).
+- [scripts/trim_consult_logs.py](scripts/trim_consult_logs.py) — выносит тяжёлые `aggregated_output` блоки из JSONL-транскриптов в отдельные файлы.
+- Каталоги `local/<assistant>/sessions.log` и `local/<assistant>/requests.log` — JSONL-журналы для всех ассистентов (`gemini`, `qwen`, `codex`, `copilot`), в них фиксируются `timestamp`, `request_id`, `assistant`, `summary/short_context`, `tools`, `status`.
+- [local/session_history.md](local/session_history.md) и `local/session_summaries/` — рабочий журнал и сводки для передачи контекста.
+- `local/gemini`, `local/qwen`, `local/codex`, `local/copilot` — содержат README и примерные записи, чтобы единообразно оформлять журналы.
+
+## Как адаптировать шаблон
+
+- **`local/project_addenda.md`.** Заполните матрицу окружений (ОС, права, инструменты), правила «можно/нельзя», каталоги токенов и требования к логам. Пока нет фактических значений — оставьте плейсхолдеры, но сохраните двуязычную структуру.
+- **`local/chat_context.md`.** Укажите рабочий язык, род, краткий профиль окружения, «Разрешённые противоречия», чек-лист закрытия сессии и напоминания по логам. Этот файл первым читают все ассистенты.
+- **Журналы ассистентов.** В `local/<assistant>/sessions.log` и `requests.log` оставьте по одной корректной записи JSONL с ISO 8601 таймстемпом (`YYYY-MM-DDTHH:MM:SSZ`), чтобы показать целевой формат.
+- **Многоагентные консультации.** Настройте команды в `scripts/consult.py` (флаги моделей, таймауты) и каталоги `tmp/consultation_runs/`, `tmp/assistant_contexts/`. После параллельного запуска используйте `scripts/trim_consult_logs.py`, чтобы вынести тяжёлые блоки в вложения.
+- **Bootstrap-процедура.** После первичного заполнения README, симлинков и логов запустите `scripts/bootstrap_check.sh`/`.ps1` и зафиксируйте результат в `local/chat_context.md` и `local/session_history.md`, чтобы следующий ассистент видел статус готовности.
+
+> ⚠️ **Windows PowerShell:** если политика исполнения блокирует запуск `.ps1`, временно ослабьте её только для текущей сессии:  
+> `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/bootstrap_check.ps1`  
+> После завершения верните прежнее значение или закройте окно. Подпись скриптов не требуется.
 - [.gitignore](.gitignore) — заготовка для скрытия [AGENTS.md](AGENTS.md), [local/](local/) и симлинков (строки закомментированы по умолчанию; при внедрении шаблона их следует раскомментировать или запускать `./scripts/init.sh`).
 - [.github/copilot-instructions.md](.github/copilot-instructions.md), [.gemini/GEMINI.md](.gemini/GEMINI.md), [GEMINI.md](GEMINI.md), [QWEN.md](QWEN.md) — симлинки на [AGENTS.md](AGENTS.md), чтобы все ассистенты читали единый набор правил без дублирования.
 
@@ -54,5 +88,22 @@ Additionally, review symlinks [.github/copilot-instructions.md](.github/copilot-
 4. Заполнить актуальные данные в [local/chat_context.md](local/chat_context.md) (дата, договорённости, проверки); при наличии специфики проекта зафиксировать её в [local/project_addenda.md](local/project_addenda.md).
 5. Убедиться, что README нового репозитория содержит скрытый HTML-комментарий (подсказка расположена в начале файла; при необходимости скопировать фрагмент из [README_snippet.md](README_snippet.md)).
 6. Ознакомиться с [AGENTS.md](AGENTS.md) и согласовать дополнительные правила с командой; при необходимости дополнить их в [local/project_addenda.md](local/project_addenda.md).
+7. После консультаций удалить временные каталоги инструментов (`{{TEMP_TOOL_DIRS}}`), чтобы не оставлять лишние конфигурации.
+8. Если токены/ключи хранились в `~/.<tool>`, согласуйте временное копирование или симлинк в `{{TOKEN_STORAGE_PATH}}`, добавьте путь в `.gitignore` и опишите процедуру очистки.
+9. Если диалог с ассистентом приближается к ~75% от контекстного окна, завершаем работу командой «завершить сессию», чтобы сформировать сводку и продолжить с чистым контекстом; переполнение окна вытесняет ранние сообщения и ломает согласованные договорённости.
+
+> Если CLI поддерживает `--data-dir` или `--config-dir`, укажите путь внутри `{{TEMP_TOOL_DIRS}}`, чтобы избежать эскалации при работе с конфигурацией.
+
+После первичной настройки обязательно изучите разделы «Быстрый старт», «Ограничения окружения», «Проверки и инструменты», «Логирование обращений», «Передача контекста» и «Синхронизация с апстримом» в [AGENTS.md](AGENTS.md) — они содержат плейсхолдеры, которые нужно адаптировать под ваш проект.
+
+## Интеграция в существующий репозиторий
+
+1. Сохраните копии текущих файлов инструкций (`AGENTS.md`, `local/chat_context.md`, `local/project_addenda.md`, `docs/assistant-*.md` и т.п.) и сравните их с шаблоном.
+2. Перенесите действующие договорённости и ограничения в соответствующие плейсхолдеры (`{{LEGACY_INSTRUCTIONS}}`, `{{CHAT_CONTEXT_FILE}}`, `{{PROJECT_ADDENDA_FILE}}`).
+3. Просмотрите существующие логи и заметки, чтобы пополнить контекст первой сессии (рабочий язык, режимы песочницы, правила эскалации, список CLI).
+4. Убедитесь, что создание временных каталогов (`{{TEMP_TOOL_DIRS}}`, `~/.<tool>`) разрешено или предусмотрены альтернативы; при отсутствии доступа подготовьте план эскалации и перечень параметров `--data-dir`/`--config-dir` для переноса конфигурации внутрь репозитория.
+5. Если токены/ключи находятся в домашней папке, временно скопируйте их или создайте симлинк в `{{TOKEN_STORAGE_PATH}}`, добавьте пути в `.gitignore` и обновите инструкции по очистке.
+6. После адаптации повторно проверьте README/CONTRIBUTING и удалите упоминания, которые устарели в новом процессе.
+7. Зафиксируйте перемещения и решения в `local/session_history.md`, чтобы другие ассистенты понимали, какие данные перенесены из старых инструкций.
 
 Перед изменениями рекомендуется изучить [CONTRIBUTING.md](CONTRIBUTING.md) и [CONTRIBUTING.en.md](CONTRIBUTING.en.md), чтобы поддерживать двуязычную документацию в актуальном состоянии.

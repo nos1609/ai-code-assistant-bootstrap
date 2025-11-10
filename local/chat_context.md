@@ -1,41 +1,82 @@
-# Контекст чата — YYYY-MM-DD
-# Chat context — YYYY-MM-DD
+# Контекст чата — <YYYY-MM-DD> / Chat context — <YYYY-MM-DD>
 
-Файл фиксирует ключевые договорённости текущей сессии. Хранится локально и не коммитится. После подтверждения рабочего языка пользователем записи можно вести только на нём.
-This file records the key agreements for the current session. It stays local and is not committed. After the user confirms the working language, records may remain solely in that language.
+Файл фиксирует ключевые договорённости текущей сессии. Детализированная история хранится в `local/session_history.md`, долговременные правила — в `local/project_addenda.md`. После подтверждения рабочего языка и формы обращения записи ведутся только на нём.
 
-## Системные указания
-## System directives
-- Базовый язык общения — <укажи язык сессии перед стартом>; обязательно заполни это поле перед первым ответом. Если язык не прописан, определи его по первому сообщению, предложи подтвердить или выбрать другой и придерживайся согласованного выбора.
-  Base communication language — specify it before the first reply; if missing, detect it from the first message, ask the user to confirm or pick another, and stick to the agreed choice.
-- В первом ответе уточняй удобный для пользователя грамматический род (и какой род модель должна использовать в ответах); до подтверждения отвечай самой в женском роде и избегай уменьшительно-ласкательных обращений.
-  In the first reply ask which grammatical gender the user prefers (and which one you should use); until they confirm, answer in the feminine form and avoid diminutives.
-- Поддерживай оформление ответов согласно [AGENTS.md](../AGENTS.md).
-  Keep the response formatting aligned with [AGENTS.md](../AGENTS.md).
+## Рабочие языки / Working languages
+- **RU:** Базовый язык — `<русский/english/...>`.  
+- **EN:** Base language — `<ru/en/...>`.  
+- **RU:** О себе говорю в `<женском/мужском/нейтральном>` роде, пользователя адресую как `<указать обращение>`.  
+- **EN:** I speak about myself in `<feminine/masculine/neutral>` form and address the user as `<preferred salutation>`.
 
-## Рабочие договорённости
-## Working agreements
-- Логирование включено по умолчанию: после подтверждения языка и рода делай записи в `local/<имя ассистента>/sessions.log`, подробности обращений храни в этой же папке. Здесь же отмечай, если пользователь запретил точные метки времени или детальное логирование.
-  Logging is enabled by default: after confirming language and gender, record entries in `local/<assistant-name>/sessions.log` and keep request details in that folder. Use this section to note if the user disallows precise timestamps or detailed logging.
-- (Здесь фиксируются уникальные договорённости, возникшие в ходе сессии, которые дополняют или уточняют [AGENTS.md](../AGENTS.md).)
-  (Log unique agreements from the session that complement or refine [AGENTS.md](../AGENTS.md).)
+## Статус готовности / Readiness status
+- `status`: `<pending|completed>`
+- `last_verified_at`: `<YYYY-MM-DDTHH:MM:SSZ>`
+- `agents_md_hash`: `sha256:<...>`
+- **RU:** После прохождения bootstrap-чеклиста обновите поле `status` на `completed`, отметьте ISO-время и хэш `AGENTS.md`.  
+  **EN:** Once the bootstrap checklist passes, set `status` to `completed`, record the ISO timestamp, and store the `AGENTS.md` hash.
 
-## Хронология запросов текущей сессии
-## Session request log
-1. (Опишите ключевые шаги, возникающие по ходу работы.)
-   (Describe the key steps that occur during the session.)
+## Системные указания / System directives
+- **RU:** Соблюдаю иерархию контекста: `local/chat_context.md` → `local/project_addenda.md` → `local/session_history.md`.  
+  **EN:** Follow the context hierarchy: `local/chat_context.md` → `local/project_addenda.md` → `local/session_history.md`.
+- **RU:** В первом ответе подтверждаю язык, род, желаемую детализацию и доступность CLI; прошу сообщать об изменениях.  
+  **EN:** First reply confirms language, gendered form, detail level, and CLI availability; invite updates if anything changes.
+- **RU:** Формат ответов — согласно [AGENTS.md](../AGENTS.md). Перед запуском нового CLI изучаю `--help`.  
+  **EN:** Responses follow [AGENTS.md](../AGENTS.md); run `--help` before using a new CLI.
+- **RU:** При ограничениях песочницы прошу эскалацию (`with_escalated_permissions=true` + justification) вместо обхода.  
+  **EN:** Request escalations (`with_escalated_permissions=true` + justification) whenever the sandbox blocks required actions.
 
-## Выполненные изменения
-## Applied changes
-- (Перечисляйте затронутые файлы и коротко поясняйте правки.)
-  (List affected files and briefly explain the adjustments.)
+## Краткая памятка / Quick profile
+- **RU:** Окружения:  
+  1. `<OS / shell 1>` — `<назначение>`.  
+  2. `<OS / shell 2>` — `<назначение>`.  
+  **EN:** Environments: see above; add or remove rows as needed.
+- **RU:** CLI `gemini`, `qwen`, `codex`, `copilot` доступны `<по умолчанию/после подтверждения>`.  
+  **EN:** List when each CLI becomes available (default or after approval).
+- **RU:** Пользователь: `<роль>; уровень детализации>`; до запроса не упрощаю инструкции.  
+  **EN:** User profile and required detail level.
+- **RU:** Bootstrap-пункты (README комментарий, симлинки, `.gitignore`, логи) `<проверены/ожидают проверки>`; отклонения фиксирую в `local/session_history.md`.  
+  **EN:** State whether bootstrap items are verified; log deviations in `local/session_history.md`.
 
-## Проверки
-## Checks
-- (Фиксируйте запущенные проверки и их результат.)
-  (Note the checks you ran and their outcome.)
+## Документация / Documentation
+- **RU:** Перечислите ключевые файлы (`docs/`, runbooks, onboarding) и договорённости где искать больше сведений.  
+- **EN:** List key docs (runbooks, onboarding) for quick reference.
 
-## Оставшиеся идеи
-## Pending ideas
-- (Добавляйте будущие улучшения или вопросы для обсуждения.)
-  (Capture future improvements or questions to discuss.)
+## Логирование / Logging
+- **RU:** Логирование включено (`local/<assistant>/sessions.log`, `requests.log`), формат JSONL, ISO-время (`YYYY-MM-DDTHH:MM:SSZ`). При запрете пользователем делаю пометку.  
+- **EN:** Logging is enabled (JSONL with ISO timestamps); note explicitly if the user disables it.
+- **RU:** Отмечаю текущие `sandbox_mode`, `network_access`, `approval_policy`; изменения фиксирую отдельной строкой.  
+- **EN:** Record the current `sandbox_mode`, `network_access`, and `approval_policy`; append lines when they change.
+
+## Разрешённые противоречия / Resolved contradictions
+- **RU:** Список правил, где проектные указания переопределяют `AGENTS.md` (например, язык общения, формат таймстемпов, порядок приветствия).  
+- **EN:** List rule overrides where project guidance replaces `AGENTS.md` defaults (language, timestamp policy, greeting order, etc.).
+
+## Процедуры / Procedures
+- **RU:**  
+  - Минимизировать ручной ввод: делю инструкции на короткие команды.  
+  - После каждой консультации обновляю `local/session_history.md`, а при закрытии — `local/session_summaries/<ISO>.md` с чек-листом `[summary][history][path][reminder][tmp cleanup]`.  
+  - Многоагентные консультации: запускаю минимум `<N>` ассистентов через `scripts/consult.py execute -a ...`, затем `process`.  
+- **EN:**  
+  - Keep commands short for manual entry.  
+  - Update `local/session_history.md` after each consultation; on closure create `local/session_summaries/<ISO>.md` and tick the checklist `[summary][history][path][reminder][tmp cleanup]`.  
+  - Multi-assistant workflow: run at least `<N>` assistants via `scripts/consult.py execute -a ...`, then `process`.
+
+## Хронология текущей сессии / Session request log
+1. `<Добавляйте ключевые события: чтение инструкций, запуски скриптов, проверки.>`
+
+## Выполненные изменения / Applied changes
+- `<path>:<line> — краткое описание>`
+
+## Проверки / Checks
+- `<команда>` — `<успех/ошибка + вывод>`
+
+## Оставшиеся идеи / Pending ideas
+- `<кратко перечислите будущие шаги или вопросы>`
+
+## Логи и hand-off / Logs & hand-off
+- **RU:** Актуальные журналы: `local/<assistant>/sessions.log`, `local/<assistant>/requests.log` (JSONL, ISO UTC).  
+  **EN:** Current logs: `local/<assistant>/sessions.log`, `local/<assistant>/requests.log` (JSONL, ISO UTC).
+- **RU:** Долгосрочный контекст — `local/session_history.md`; итоговые сводки — `local/session_summaries/`.  
+  **EN:** Long-term context lives in `local/session_history.md`; final summaries reside in `local/session_summaries/`.
+- **RU:** При hand-off обновляю `handoff_from` / `handoff_to` в `local/<assistant>/sessions.log` и ссылку на последнюю сводку.  
+  **EN:** During hand-off, set `handoff_from` / `handoff_to` in `local/<assistant>/sessions.log` and reference the latest summary file.
