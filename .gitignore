@@ -3,14 +3,32 @@
 # Uncomment entries below after copying the template into your project
 # to keep private instructions out of version control.
 
+# При интеграции шаблона скопируйте строки ниже в `.git/info/exclude`,
+# чтобы спрятать служебные артефакты без изменений `.gitignore` проекта:
 # AGENTS.md
 # local/
 # local/chat_context.md
 # local/project_addenda.md
+# local/session_history.md
+# local/session_summaries/
+# local/bootstrap.ready
 # local/*/sessions.log
 # local/*/requests.log
+# README.md
+# README.en.md
+# CONTRIBUTING.md
+# CONTRIBUTING.en.md
+# README_snippet.md
 # .github/copilot-instructions.md
-# .gemini/GEMINI.md
+# .gemini/
 # GEMINI.md
 # QWEN.md
-# .qwen/QWEN.md
+# .qwen/
+# tmp/
+# tmp/assistant_contexts/
+# tmp/consultation_runs/
+# tmp/gemini_home
+# tmp/qwen_home
+# tmp/copilot_home
+# tmp/cli_tokens
+# scripts/

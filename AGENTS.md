@@ -121,6 +121,37 @@ Commands:
   **EN:** Create symlinks [.github/copilot-instructions.md](.github/copilot-instructions.md) and [.gemini/GEMINI.md](.gemini/GEMINI.md) pointing to [AGENTS.md](AGENTS.md).
 - **RU:** Убедись, что [.gitignore](.gitignore) скрывает [AGENTS.md](AGENTS.md), каталог `local/` и симлинки ассистентов.
   **EN:** Ensure [.gitignore](.gitignore) hides [AGENTS.md](AGENTS.md), the `local/` directory, and the assistant symlinks.
+- **RU:** При интеграции шаблона в другую репозиторию добавь служебные пути в `.git/info/exclude`, чтобы не менять `.gitignore` проекта; скопируй блок ниже и расширяй его по мере необходимости.
+  **EN:** When integrating the template elsewhere, add the service paths to `.git/info/exclude` instead of touching the project `.gitignore`; copy the block below and extend it as needed.
+  ```
+  AGENTS.md
+  local/
+  local/chat_context.md
+  local/project_addenda.md
+  local/session_history.md
+  local/session_summaries/
+  local/bootstrap.ready
+  local/*/sessions.log
+  local/*/requests.log
+  README.md
+  README.en.md
+  CONTRIBUTING.md
+  CONTRIBUTING.en.md
+  README_snippet.md
+  .github/copilot-instructions.md
+  .gemini/
+  GEMINI.md
+  QWEN.md
+  .qwen/
+  tmp/
+  tmp/assistant_contexts/
+  tmp/consultation_runs/
+  tmp/gemini_home
+  tmp/qwen_home
+  tmp/copilot_home
+  tmp/cli_tokens
+  scripts/
+  ```
 - **RU:** После завершения подготовки обнови [local/chat_context.md](local/chat_context.md), зафиксировав выполненные шаги.
   **EN:** After the bootstrap steps, update [local/chat_context.md](local/chat_context.md) to document what was done.
 
