@@ -46,9 +46,7 @@ Ensure temp CLI homes (`tmp/gemini_home`, `tmp/qwen_home`, `tmp/copilot_home`, `
 - [README_snippet.md](README_snippet.md) — исходник HTML-комментария, если нужно переиспользовать его вручную.
 - [scripts/init.sh](scripts/init.sh) — скрипт для развёртывания симлинков и заполнения `.gitignore`.
 - [scripts/bootstrap_check.sh](scripts/bootstrap_check.sh) / [scripts/bootstrap_check.ps1](scripts/bootstrap_check.ps1) — проверка, что README содержит скрытый комментарий, симлинки указывают на `AGENTS.md`, `.gitignore` скрывает инструкции, а логи ассистентов используют ISO 8601 UTC.
-- [scripts/collect_open_items.py](scripts/collect_open_items.py) — собирает “Рекомендации / Открытые вопросы” из `local/session_summaries/*.md`, чтобы новый ассистент видел хвосты.
-- [scripts/consult.py](scripts/consult.py) — двухэтапный оркестратор (stage1: запуск ассистентов, stage2: обработка логов и запись в `local/session_history.md`).
-- [scripts/trim_consult_logs.py](scripts/trim_consult_logs.py) — выносит тяжёлые `aggregated_output` блоки из JSONL-транскриптов в отдельные файлы.
+- `local/scripts/` — проектные утилиты (например, сбор открытых пунктов, оркестрация консультаций, тримминг логов); смотрите комментарии внутри скриптов.
 - Каталоги `local/<assistant>/sessions.log` и `local/<assistant>/requests.log` — JSONL-журналы для всех ассистентов (`gemini`, `qwen`, `codex`, `copilot`), в них фиксируются `timestamp`, `request_id`, `assistant`, `summary/short_context`, `tools`, `status`.
 - [local/session_history.md](local/session_history.md) и `local/session_summaries/` — рабочий журнал и сводки для передачи контекста.
 - `local/gemini`, `local/qwen`, `local/codex`, `local/copilot` — содержат README и примерные записи, чтобы единообразно оформлять журналы.
@@ -58,7 +56,7 @@ Ensure temp CLI homes (`tmp/gemini_home`, `tmp/qwen_home`, `tmp/copilot_home`, `
 - **`local/project_addenda.md`.** Заполните матрицу окружений (ОС, права, инструменты), правила «можно/нельзя», каталоги токенов и требования к логам. Пока нет фактических значений — оставьте плейсхолдеры, но сохраните двуязычную структуру.
 - **`local/chat_context.md`.** Укажите рабочий язык, род, краткий профиль окружения, «Разрешённые противоречия», чек-лист закрытия сессии и напоминания по логам. Этот файл первым читают все ассистенты.
 - **Журналы ассистентов.** В `local/<assistant>/sessions.log` и `requests.log` оставьте по одной корректной записи JSONL с ISO 8601 таймстемпом (`YYYY-MM-DDTHH:MM:SSZ`), чтобы показать целевой формат.
-- **Многоагентные консультации.** Настройте команды в `scripts/consult.py` (флаги моделей, таймауты) и каталоги `tmp/consultation_runs/`, `tmp/assistant_contexts/`. После параллельного запуска используйте `scripts/trim_consult_logs.py`, чтобы вынести тяжёлые блоки в вложения.
+- **Многоагентные консультации.** Используйте проектные скрипты из `local/scripts/` (укажите параметры в addenda), храните сырые логи в `tmp/consultation_runs/`, обработанные — в `tmp/assistant_contexts/`.
 - **Bootstrap-процедура.** После первичного заполнения README, симлинков и логов запустите `scripts/bootstrap_check.sh`/`.ps1` и зафиксируйте результат в `local/chat_context.md` и `local/session_history.md`, чтобы следующий ассистент видел статус готовности.
 
 > ⚠️ **Windows PowerShell:** если политика исполнения блокирует запуск `.ps1`, временно ослабьте её только для текущей сессии:  

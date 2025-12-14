@@ -11,7 +11,7 @@ RU: Скрипт реализует два этапа:
      для указанных ассистентов и запускает их параллельно. Каждый процесс
      получает единый префикс-подсказку и пишет вывод в `tmp/consultation_runs/<ID>/*.raw.log`.
   2. process — обрабатывает накопленные логи: опционально вызывает
-     `scripts/trim_consult_logs.py`, сохраняет компактные JSONL и добавляет
+     `local/scripts/trim_consult_logs.py`, сохраняет компактные JSONL и добавляет
      краткую запись в `local/session_history.md`.
 
 EN: The script runs in two stages:
@@ -19,7 +19,7 @@ EN: The script runs in two stages:
      local/project_addenda.md, local/session_history.md), spawn the
      requested assistants in parallel, and capture their raw JSON logs.
   2. process — post-process those logs (optionally via
-     `scripts/trim_consult_logs.py`) and append a summary to
+     `local/scripts/trim_consult_logs.py`) and append a summary to
      `local/session_history.md`.
 """
 
@@ -51,7 +51,7 @@ RUNS_DIR = Path("tmp", "consultation_runs")
 ASSISTANT_CONTEXTS = Path("tmp", "assistant_contexts")
 ASSISTANT_LOG_DIR = ASSISTANT_CONTEXTS / "logs"
 ASSISTANT_ATTACH_DIR = ASSISTANT_CONTEXTS / "attachments"
-TRIM_SCRIPT = Path("scripts", "trim_consult_logs.py")
+TRIM_SCRIPT = Path(__file__).parent / "trim_consult_logs.py"
 SESSION_HISTORY = Path("local", "session_history.md")
 TOTAL_TIMEOUT = 120  # seconds
 

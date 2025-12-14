@@ -3,7 +3,7 @@
 EN: Collects open items from session summaries so the next assistant can resume quickly.
 
 Использование / Usage:
-    python scripts/collect_open_items.py [--summaries-dir local/session_summaries]
+    python local/scripts/collect_open_items.py [--summaries-dir local/session_summaries]
 
 RU: Скрипт проходит по всем Markdown-файлам в каталоге сводок (от новых к старым) и вытаскивает
 разделы «Рекомендации / Next Steps» и «Открытые вопросы / Pending Items».

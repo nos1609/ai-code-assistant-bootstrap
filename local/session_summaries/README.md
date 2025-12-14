@@ -14,5 +14,6 @@
 # Открытые вопросы / Pending items
 ```
 
-**RU:** Сводки ускоряют hand-off: следующий ассистент видит последние действия и нерешённые вопросы. Скрипт `scripts/collect_open_items.py` автоматически собирает из них незакрытые пункты.  
-**EN:** Summaries speed up hand-offs: the next assistant instantly sees recent steps and pending items. `scripts/collect_open_items.py` aggregates “Recommendations / Pending items” from these files automatically.
+**RU:** Сводки ускоряют hand-off: следующий ассистент видит последние действия и нерешённые вопросы. Скрипт `local/scripts/<collect_script>.py` автоматически собирает из них незакрытые пункты.  
+**EN:** Summaries speed up hand-offs: the next assistant instantly sees recent steps and pending items. `local/scripts/<collect_script>.py` aggregates “Recommendations / Pending items” from these files automatically.
+

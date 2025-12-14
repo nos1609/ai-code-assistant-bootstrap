@@ -55,11 +55,11 @@
 - **RU:**  
   - Минимизировать ручной ввод: делю инструкции на короткие команды.  
   - После каждой консультации обновляю `local/session_history.md`, а при закрытии — `local/session_summaries/<ISO>.md` с чек-листом `[summary][history][path][reminder][tmp cleanup]`.  
-  - Многоагентные консультации: запускаю минимум `<N>` ассистентов через `scripts/consult.py execute -a ...`, затем `process`.  
+  - Многоагентные консультации: запускаю минимум `<N>` ассистентов через `local/scripts/consult.py execute -a ...`, затем `process`.  
 - **EN:**  
   - Keep commands short for manual entry.  
   - Update `local/session_history.md` after each consultation; on closure create `local/session_summaries/<ISO>.md` and tick the checklist `[summary][history][path][reminder][tmp cleanup]`.  
-  - Multi-assistant workflow: run at least `<N>` assistants via `scripts/consult.py execute -a ...`, then `process`.
+  - Multi-assistant workflow: run at least `<N>` assistants via `local/scripts/consult.py execute -a ...`, then `process`.
 
 ## Хронология текущей сессии / Session request log
 1. `<Добавляйте ключевые события: чтение инструкций, запуски скриптов, проверки.>`

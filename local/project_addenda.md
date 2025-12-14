@@ -19,6 +19,7 @@
   | `<OS / shell>` | `<что делаем>` | `<bash/pwsh/git/...>` | `<когда можно запускать gemini/qwen/codex/copilot>` | `<что требует согласования, где писать>` |
 
 - **RU:** Ассистент сам определяет активную среду (PowerShell, Bash, WSL и т.д.) и описывает переключения в ответах. Скрипты `scripts/init.sh` / `.ps1` повторно не запускаем, если симлинки целы.  
+
   **EN:** The assistant detects the active environment automatically (PowerShell, Bash, WSL, etc.) and documents switches in the reply. Do not rerun `scripts/init.*` if symlinks remain intact.
 - **RU:** Симлинки `.github/copilot-instructions.md`, `.gemini/GEMINI.md`, `.qwen/QWEN.md`, `GEMINI.md`, `QWEN.md` всегда относительные; README RU/EN синхронизируем при изменениях.  
   **EN:** Keep `.github/copilot-instructions.md`, `.gemini/GEMINI.md`, `.qwen/QWEN.md`, `GEMINI.md`, `QWEN.md` as relative symlinks; keep RU/EN READMEs in sync.
@@ -35,15 +36,20 @@
 
 ## 4. Инструменты и проверки / Tooling and Checks
 - **RU:** Перед первым запуском CLI выполняем `<tool> --help`, фиксируем наблюдения в `local/session_history.md`.  
+
   **EN:** Run `<tool> --help` before the first CLI invocation and log observations in `local/session_history.md`.
 - **RU:** Логи (`local/<assistant>/sessions.log`, `local/<assistant>/requests.log`) ведём в формате JSONL, timestamp = ISO 8601 UTC (`YYYY-MM-DDTHH:MM:SSZ`), минимальные поля: `timestamp`, `request_id`, `assistant`, `summary`, `tools`, `status`.  
+
   **EN:** Maintain JSONL logs with ISO 8601 UTC timestamps and the fields `timestamp`, `request_id`, `assistant`, `summary`, `tools`, `status`.
-- **RU:** После консультаций (`codex exec --json`, `gemini`, `qwen`, `copilot`) прогоняем логи через `scripts/trim_consult_logs.py`, складываем результаты в `tmp/assistant_contexts/logs/<cli>/` и вложения в `tmp/assistant_contexts/attachments/<cli>/`. Ссылки добавляем в ответы и `local/session_history.md`.  
-  **EN:** Post-process consultations via `scripts/trim_consult_logs.py`, storing outputs under `tmp/assistant_contexts/logs/<cli>/` and attachments under `tmp/assistant_contexts/attachments/<cli>/`; reference them in replies and `local/session_history.md`.
+- **RU:** После консультаций (`codex exec --json`, `gemini`, `qwen`, `copilot`) прогоняем логи через `<consult_trim_script>`, складываем результаты в `tmp/assistant_contexts/logs/<cli>/` и вложения в `tmp/assistant_contexts/attachments/<cli>/`. Ссылки добавляем в ответы и `local/session_history.md`.  
+
+  **EN:** Post-process consultations via `<consult_trim_script>`, storing outputs under `tmp/assistant_contexts/logs/<cli>/` and attachments under `tmp/assistant_contexts/attachments/<cli>/`; reference them in replies and `local/session_history.md`.
 - **RU:** При отсутствии Python или необходимых зависимостей используем fallback: текстовый отчёт в `tmp/assistant_contexts/text/<cli>/<ISO8601>.txt` и пометка в истории.  
+
   **EN:** If Python or required dependencies are unavailable, fall back to plain-text reports in `tmp/assistant_contexts/text/<cli>/<ISO8601>.txt` and note the limitation in the history.
-- **RU:** Обязательные проверки перед релизами (`{{MANDATORY_CHECKS}}`) опишите здесь: например, `./scripts/bootstrap_check.sh`, `terraform fmt`, `ansible-lint`, `pytest`.  
-  **EN:** List mandatory pre-release checks (`{{MANDATORY_CHECKS}}`) such as `./scripts/bootstrap_check.sh`, `terraform fmt`, `ansible-lint`, `pytest`.
+- **RU:** Обязательные проверки перед релизами (`{{MANDATORY_CHECKS}}`) опишите здесь: например, `./scripts/bootstrap_check.sh`, `bash -n <script>`, `shellcheck -x <script>`, `<project linters/tests>`.  
+
+  **EN:** List mandatory pre-release checks (`{{MANDATORY_CHECKS}}`) such as `./scripts/bootstrap_check.sh`, `bash -n <script>`, `shellcheck -x <script>`, `<project linters/tests>`.
 
 ## 5. Модели ассистентов / Assistant Models
 - **RU:** `gemini`: `<основная модель>`; fallback `<альтернатива>`.  
@@ -57,9 +63,11 @@
 
 ## 6. Дополнительные процессы / Additional Processes
 - **RU:** Перед каждой сессией подтверждаем bootstrap (README-комментарий, симлинки, `.gitignore`, логи). Отклонения записываем в `local/session_history.md`.  
+
   **EN:** At every session start, confirm bootstrap (README snippet, symlinks, `.gitignore`, logs) and document deviations in `local/session_history.md`.
-- **RU:** После чтения `local/chat_context.md`/`local/project_addenda.md` собираем открытые вопросы из `local/session_summaries/` (при необходимости используем `scripts/collect_open_items.py`) и включаем их в первое сообщение.  
-  **EN:** After reading `local/chat_context.md`/`local/project_addenda.md`, collect open items from `local/session_summaries/` (via `scripts/collect_open_items.py` if desired) and include them in the first reply.
+- **RU:** После чтения `local/chat_context.md`/`local/project_addenda.md` собираем открытые вопросы из `local/session_summaries/` (при необходимости используем `<collect_open_items_script>`) и включаем их в первое сообщение.  
+
+  **EN:** After reading `local/chat_context.md`/`local/project_addenda.md`, collect open items from `local/session_summaries/` (via `<collect_open_items_script>` if desired) and include them in the first reply.
 - **RU:** Новые договорённости сначала фиксируем в `local/session_history.md`, затем обновляем `local/chat_context.md`/`local/project_addenda.md`.  
   **EN:** Log new agreements in `local/session_history.md` before updating `local/chat_context.md`/`local/project_addenda.md`.
 - **RU:** При завершении работы формируем `local/session_summaries/<ISO8601>.md` со структурой: «Контекст», «Системные указания», «Ключевые файлы» (`path:line + note`), «Последние события» (команда → результат), «Проблемы и решения», «Рекомендации / Следующие шаги» (чек-лист), «Дополнительные материалы», «Открытые вопросы».  

@@ -40,9 +40,7 @@ The ai-code-assistant-bootstrap pack includes:
 - [README_snippet.md](README_snippet.md) — source of the HTML comment in case you need to re-use it.
 - [scripts/init.sh](scripts/init.sh) — helper script that prepares symlinks and populates `.gitignore`.
 - [scripts/bootstrap_check.sh](scripts/bootstrap_check.sh) / [scripts/bootstrap_check.ps1](scripts/bootstrap_check.ps1) — ensure the hidden README snippet is present, all assistant symlinks target `AGENTS.md`, `.gitignore` hides assistant artifacts, and assistant logs use ISO 8601 UTC.
-- [scripts/collect_open_items.py](scripts/collect_open_items.py) — aggregates “Recommendations / Pending items” from `local/session_summaries/*.md`, so the next assistant sees outstanding tasks.
-- [scripts/consult.py](scripts/consult.py) — two-stage orchestrator (stage 1: run assistants, stage 2: post-process logs and append `local/session_history.md`).
-- [scripts/trim_consult_logs.py](scripts/trim_consult_logs.py) — externalizes bulky `aggregated_output` data from raw JSONL transcripts.
+- `local/scripts/` — project utilities (e.g., open-item collector, consultation orchestrator, log trimming); see script headers for usage.
 - `local/<assistant>/sessions.log` and `local/<assistant>/requests.log` — JSONL logs for every assistant (`gemini`, `qwen`, `codex`, `copilot`) capturing `timestamp`, `request_id`, `assistant`, `summary/short_context`, `tools`, `status`.
 - [local/session_history.md](local/session_history.md) and `local/session_summaries/` — living log and structured hand-off notes shared by all assistants.
 - `local/gemini`, `local/qwen`, `local/codex`, `local/copilot` — each ships with a README and sample entries to keep the schema consistent.
@@ -52,7 +50,7 @@ The ai-code-assistant-bootstrap pack includes:
 - **`local/project_addenda.md`.** Fill in the environment matrix (OS, privileges, tooling), allow/deny rules, token directories, and logging policy. Use placeholders when details are unknown, but keep the bilingual sections intact.
 - **`local/chat_context.md`.** Record the working language and gender, quick environment profile, “Resolved contradictions,” the session-summary checklist, and logging reminders. This is the first file every assistant reads.
 - **Assistant logs.** Leave at least one JSONL entry in `local/<assistant>/sessions.log` and `requests.log` demonstrating ISO 8601 timestamps (`YYYY-MM-DDTHH:MM:SSZ`) plus the fields `timestamp`, `request_id`, `assistant`, `summary`, `tools`, `status`.
-- **Multi-assistant workflow.** Adjust `scripts/consult.py` (model flags, timeouts) together with `tmp/consultation_runs/` and `tmp/assistant_contexts/`. After parallel runs, invoke `scripts/trim_consult_logs.py` to externalize bulky output chunks.
+- **Multi-assistant workflow.** Use project scripts under `local/scripts/` (document parameters in addenda); keep raw logs in `tmp/consultation_runs/` and processed artifacts in `tmp/assistant_contexts/`.
 - **Bootstrap procedure.** Once README, symlinks, and logs are in place, run `scripts/bootstrap_check.sh`/`.ps1` and record the outcome inside `local/chat_context.md` and `local/session_history.md` so the next assistant knows the readiness state.
 
 > ⚠️ **Windows PowerShell:** if execution policy blocks `.ps1`, relax it for the current session only:  
