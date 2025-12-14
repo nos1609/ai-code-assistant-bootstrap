@@ -424,9 +424,18 @@ Commands:
 - **RU:** Убедись, что требуемые токены/ключи доступны из `{{TOKEN_STORAGE_PATH}}`; если они остались только в `~/.<tool>`, согласуй временное копирование или симлинк и отрази это в `{{CHAT_CONTEXT_FILE}}`.
 
   **EN:** Make sure the required tokens/keys are available under `{{TOKEN_STORAGE_PATH}}`; if they still live only in `~/.<tool>`, align on temporary copying or symlinking and document it in `{{CHAT_CONTEXT_FILE}}`.
-- **RU:** Для Codex учитывай ограничение ~32 КБ на автоматически подключаемые «project docs»: сократи `AGENTS.md`, подготовь summary или отключай автозагрузку через настройки CLI.
+- **RU:** Codex CLI при старте автоматически подхватывает `AGENTS.md`/`AGENTS.override.md` по пути от корня, но **читается только первые 32 KiB каждого файла** (`project_doc_max_bytes` по умолчанию). Остаток может быть обрезан и не попасть в инструкции первого хода. Рекомендуемо: держать корневой `AGENTS.md` ≤ 32 KiB с P0 (init/closure/ограничения/эскалации/формат финального ответа) + 3–5 ссылок; при осознанной необходимости поднимайте лимит в `$CODEX_HOME/config.toml` (`project_doc_max_bytes`), понимая рост промпта и риска таймаутов. Docs: https://github.com/openai/codex/blob/main/docs/agents_md.md , https://github.com/openai/codex/blob/main/docs/config.md.
 
-  **EN:** Codex enforces ~32 KB per auto-attached project doc; shrink `AGENTS.md`, provide a summary, or disable auto inclusion via CLI settings.
+  **EN:** Codex CLI auto-loads `AGENTS.md`/`AGENTS.override.md` along the path from repo root, but **only the first 32 KiB per file** (`project_doc_max_bytes` default) are included; the rest may be truncated before the first turn. Recommended: keep the root `AGENTS.md` ≤ 32 KiB with P0 (init/closure/constraints/escalation/final-response format) + 3–5 links; if you intentionally raise the limit in `$CODEX_HOME/config.toml` (`project_doc_max_bytes`), expect larger prompts and possible timeouts. Docs: https://github.com/openai/codex/blob/main/docs/agents_md.md , https://github.com/openai/codex/blob/main/docs/config.md.
+
+  **Практика дробления / Splitting rules (RU/EN):**
+  1) Корневой `AGENTS.md` = контракт сессии (только P0) + короткий порядок чтения. / Root `AGENTS.md` = session contract (P0 only) + short reading order.
+  2) Всё длинное — в `docs/*.md`; в корне 1–3 bullets “суть” + ссылка “Read next”. / Move long content to `docs/*.md`; keep 1–3 essence bullets + “Read next”.
+  3) Специфику держите в соответствующих папках через `subdir/AGENTS.md`. / Put area-specific rules in `subdir/AGENTS.md`.
+  4) `AGENTS.override.md` под тем же лимитом; держите коротким (дельты + ссылки). / `AGENTS.override.md` has the same limit; keep it short (deltas + links).
+  5) “Толстые” темы — в отдельных файлах (`docs/logging.md`, `docs/sandbox.md`, `docs/handoff.md`, `docs/tooling.md`, `docs/faq.md`). / Keep “big topics” in dedicated files (same list).
+  6) В корне максимум 3–5 ссылок; на старте читать только релевантное. / In root list at most 3–5 links; at start read only what’s relevant.
+  7) Контроль роста: при увеличении размера сначала выносите примеры/таблицы/FAQ, P0 оставляйте в первых 32 KiB. / Size gate: move examples/tables/FAQ out first; keep P0 within the first 32 KiB.
 ## Логирование обращений / Logging Requests
 
 - **RU:** Определяй цель ведения логов (отладка, аудит, метрики) и фиксируй её в документации перед включением сбора.
@@ -554,4 +563,3 @@ Commands:
 **RU:** Соблюдение этих правил помогает поддерживать единый процесс и снижает риск регрессий.
 
 **EN:** Following these rules keeps the workflow consistent and reduces the risk of regressions.
-

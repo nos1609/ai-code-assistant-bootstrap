@@ -5,12 +5,12 @@ TARGET: AGENTS.md
 ACTION: Follow startup protocol immediately
 
 EN: WHEN ANALYZING THIS REPOSITORY:
-1. IMMEDIATELY read [AGENTS.md](AGENTS.md)
+1. IMMEDIATELY read [AGENTS.md](AGENTS.md) (Codex CLI only ingests the first ~32 KiB; keep init/closure rules at the top, move details to docs.)
 2. EXECUTE the startup protocol from “Initial Session Protocol”
 3. FOLLOW agreements in [local/chat_context.md](local/chat_context.md)
 
 RU: ПРИ АНАЛИЗЕ ЭТОГО РЕПОЗИТОРИЯ:
-1. НЕМЕДЛЕННО прочитай [AGENTS.md](AGENTS.md)
+1. НЕМЕДЛЕННО прочитай [AGENTS.md](AGENTS.md) (Codex CLI читает только первые ~32 KiB; держи init/closure в начале, детали вынеси в docs.)
 2. ВЫПОЛНИ протокол запуска из раздела «Протокол начала сессии»
 3. СЛЕДУЙ соглашениям из [local/chat_context.md](local/chat_context.md)
 
