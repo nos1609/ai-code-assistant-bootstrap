@@ -73,7 +73,7 @@ Local installation of the command-line interfaces (`gemini`, `qwen`, `codex`, `c
 | Assistant | Local install | Approval | Link | Repository placement | Notes |
 |-----------|--------------|----------|------|-----------------------|-------|
 | `gemini`  | ☑ | ☑ | [google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli) | [.gemini/GEMINI.md](.gemini/GEMINI.md) → [AGENTS.md](AGENTS.md); [GEMINI.md](GEMINI.md) (repo root) → [AGENTS.md](AGENTS.md) | — |
-| `qwen`    | ☑ | ☑ | [QwenLM/qwen-code](https://github.com/QwenLM/qwen-code)     | [QWEN.md](QWEN.md) (repo root) → [AGENTS.md](AGENTS.md) | May switch to the requested locale only from the second reply; restate the rules if needed. |
+| `qwen`    | ☑ | ☑ | [QwenLM/qwen-code](https://github.com/QwenLM/qwen-code)     | [QWEN.md](QWEN.md) (repo root) → [AGENTS.md](AGENTS.md) | Does not auto-run the bootstrap/protocol from AGENTS.md; needs an explicit prompt allowing shell commands (e.g., "run the protocol and use shell for symlinks and logs"). |
 | `codex`   | ☑ | ☑ | [openai/codex](https://github.com/openai/codex)             | [AGENTS.md](AGENTS.md) (repo root) | run via `codex exec` |
 | `copilot` | ☑ | ☑ | [github/copilot-cli](https://github.com/github/copilot-cli) | [.github/copilot-instructions.md](.github/copilot-instructions.md) → [AGENTS.md](AGENTS.md) | — |
 
@@ -106,6 +106,5 @@ After the bootstrap, review the “Quick Start,” “Environment Limits,” “
 7. Record migrations and decisions in `local/session_history.md` so other assistants know which details were imported from previous instructions.
 
 Before introducing changes, consult [CONTRIBUTING.md](CONTRIBUTING.md) and [CONTRIBUTING.en.md](CONTRIBUTING.en.md) to keep the bilingual documentation aligned.
-
 
 

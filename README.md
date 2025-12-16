@@ -73,7 +73,7 @@ Ensure temp CLI homes (`tmp/gemini_home`, `tmp/qwen_home`, `tmp/copilot_home`, `
 | Ассистент | Локальная установка | Подтверждение | Ссылка | Расположение в репозитории | Примечание |
 |-----------|--------------------|--------------|--------|----------------------------|------------|
 | `gemini`  | ☑ | ☑ | [google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli) | [.gemini/GEMINI.md](.gemini/GEMINI.md) → [AGENTS.md](AGENTS.md); [GEMINI.md](GEMINI.md) (корень) → [AGENTS.md](AGENTS.md) | — |
-| `qwen`    | ☑ | ☑ | [QwenLM/qwen-code](https://github.com/QwenLM/qwen-code)     | [QWEN.md](QWEN.md) (корень) → [AGENTS.md](AGENTS.md) | Может переключиться на язык запроса только со второй реплики; при необходимости напомните о правилах явно. |
+| `qwen`    | ☑ | ☑ | [QwenLM/qwen-code](https://github.com/QwenLM/qwen-code)     | [QWEN.md](QWEN.md) (корень) → [AGENTS.md](AGENTS.md) | Не выполняет bootstrap/протокол из AGENTS.md автоматически; требует явного промпта с разрешением shell-команд (например: "выполни протокол, используй shell для симлинков и логов"). |
 | `codex`   | ☑ | ☑ | [openai/codex](https://github.com/openai/codex)             | [AGENTS.md](AGENTS.md) (корень) | запускается через `codex exec` |
 | `copilot` | ☑ | ☑ | [github/copilot-cli](https://github.com/github/copilot-cli) | [.github/copilot-instructions.md](.github/copilot-instructions.md) → [AGENTS.md](AGENTS.md) | — |
 
@@ -106,4 +106,3 @@ Ensure temp CLI homes (`tmp/gemini_home`, `tmp/qwen_home`, `tmp/copilot_home`, `
 7. Зафиксируйте перемещения и решения в `local/session_history.md`, чтобы другие ассистенты понимали, какие данные перенесены из старых инструкций.
 
 Перед изменениями рекомендуется изучить [CONTRIBUTING.md](CONTRIBUTING.md) и [CONTRIBUTING.en.md](CONTRIBUTING.en.md), чтобы поддерживать двуязычную документацию в актуальном состоянии.
-
