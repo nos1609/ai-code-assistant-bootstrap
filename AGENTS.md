@@ -107,9 +107,9 @@ Commands:
 - **RU:** Перед стандартными уточнениями (род, окружение, детализация, доступность CLI) сверяйся с `local/ai/chat_context.md`; если сведения уже зафиксированы, подтверди их и предложи обновить при изменениях.
 
   **EN:** Before asking the standard clarification questions (gender, environment, detail level, CLI availability), consult `local/ai/chat_context.md`; when information is already recorded, acknowledge it and invite updates if something changed.
-- **RU:** При запросах «инициализируй/разверни шаблон/подтяни bootstrap» **не** заменяй `README*` на шаблонные версии; остальные файлы добавляй или дополняй, избегая перезаписи без явного указания.
+- **RU:** При интеграции шаблона **не** копируй и **не** заменяй `README.md`/`README.en.md`. Если README уже есть — добавь только скрытый HTML‑сниппет из `README_snippet.md`. Если README нет — создай минимальный README и вставь сниппет, не копируя шаблонный текст.
 
-  **EN:** For “initialize/apply the template/bootstrap,” **do not** replace existing `README*` with template copies; for other files, add or extend rather than overwrite unless explicitly instructed.
+  **EN:** When integrating the template, **do not** copy or replace `README.md`/`README.en.md`. If a README already exists, only add the hidden HTML snippet from `README_snippet.md`. If there is no README, create a minimal one and insert the snippet without copying the template text.
 - **RU:** Первое сообщение пиши на языке, указанном в локальных указаниях. Если язык не задан, определи его по запросу пользователя, попроси подтвердить или выбрать другой и придерживайся согласованного варианта.
 
   **EN:** Use the language defined in the local directives for the first reply. If none is specified, detect the user’s language, ask them to confirm or choose another, and stick to the agreed choice.

@@ -98,12 +98,13 @@ After the bootstrap, review the “Quick Start,” “Environment Limits,” “
 ## Integrating into an Existing Repository
 
 1. Back up the current instruction files (`AGENTS.md`, `local/chat_context.md`, `local/project_addenda.md`, `docs/assistant-*.md`, etc.) and diff them against the template.
-2. Carry over active agreements and constraints into the relevant placeholders (`{{LEGACY_INSTRUCTIONS}}`, `{{CHAT_CONTEXT_FILE}}`, `{{PROJECT_ADDENDA_FILE}}`).
-3. Review existing logs or runbooks to enrich the first-session context (working language, sandbox modes, escalation policy, available CLIs).
-4. Ensure creating temp directories (`{{TEMP_TOOL_DIRS}}`, `~/.<tool>`) is allowed or plan an escalation alternative if not; capture the `--data-dir`/`--config-dir` overrides that keep files inside the repo.
-5. If tokens/keys live in the home directory, temporarily copy or symlink them into `{{TOKEN_STORAGE_PATH}}`, update `.gitignore`, and document the cleanup routine.
-6. After adapting the template, re-check README/CONTRIBUTING and retire any references that no longer apply to the updated workflow.
-7. Record migrations and decisions in `local/session_history.md` so other assistants know which details were imported from previous instructions.
+2. Do not copy or replace `README.md`/`README.en.md`. If a README already exists, only add the hidden HTML snippet from `README_snippet.md`. If there is no README, create a minimal one and insert the snippet without copying the template text.
+3. Carry over active agreements and constraints into the relevant placeholders (`{{LEGACY_INSTRUCTIONS}}`, `{{CHAT_CONTEXT_FILE}}`, `{{PROJECT_ADDENDA_FILE}}`).
+4. Review existing logs or runbooks to enrich the first-session context (working language, sandbox modes, escalation policy, available CLIs).
+5. Ensure creating temp directories (`{{TEMP_TOOL_DIRS}}`, `~/.<tool>`) is allowed or plan an escalation alternative if not; capture the `--data-dir`/`--config-dir` overrides that keep files inside the repo.
+6. If tokens/keys live in the home directory, temporarily copy or symlink them into `{{TOKEN_STORAGE_PATH}}`, update `.gitignore`, and document the cleanup routine.
+7. After adapting the template, re-check README/CONTRIBUTING and retire any references that no longer apply to the updated workflow.
+8. Record migrations and decisions in `local/session_history.md` so other assistants know which details were imported from previous instructions.
 
 Before introducing changes, consult [CONTRIBUTING.md](CONTRIBUTING.md) and [CONTRIBUTING.en.md](CONTRIBUTING.en.md) to keep the bilingual documentation aligned.
 
