@@ -3,7 +3,7 @@
 EN: Collects open items from session summaries so the next assistant can resume quickly.
 
 Использование / Usage:
-    python local/scripts/collect_open_items.py [--summaries-dir local/session_summaries]
+    python local/ai/scripts/collect_open_items.py [--summaries-dir local/ai/session_summaries]
 
 RU: Скрипт проходит по всем Markdown-файлам в каталоге сводок (от новых к старым) и вытаскивает
 разделы «Рекомендации / Next Steps» и «Открытые вопросы / Pending Items».
@@ -96,7 +96,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--summaries-dir",
-        default=Path("local/session_summaries"),
+        default=Path("local/ai/session_summaries"),
         type=Path,
         help="RU: Каталог со сводками / EN: Directory with session summaries",
     )
@@ -116,3 +116,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

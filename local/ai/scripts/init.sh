@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Скрипт готовит симлинки и настраивает .gitignore для шаблона агента.
-# Helper script that prepares symlinks and ignore rules for the agent template.
+# Скрипт готовит симлинки и настраивает .git/info/exclude для шаблона агента.
+# Helper script that prepares symlinks and .git/info/exclude entries for the agent template.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 cd "${REPO_ROOT}"
 
 # Гарантируем наличие каталогов, куда будут складываться симлинки.
 # Ensure directories for symlink targets exist.
 mkdir -p .github .gemini .qwen
+
+# Ensure local temp workspace exists.
+mkdir -p tmp/ai
 
 # Обновляем симлинки на единый набор инструкций для разных ассистентов.
 # Refresh symlinks so every assistant reads the same instructions.
@@ -21,34 +24,58 @@ ln -sfn AGENTS.md GEMINI.md
 ln -sfn AGENTS.md QWEN.md
 ln -sfn ../AGENTS.md .qwen/QWEN.md
 
-# Создаём .gitignore, если он отсутствует в репозитории.
-# Create .gitignore if the repository does not have one yet.
-if [ ! -f .gitignore ]; then
-  touch .gitignore
+# Pick ignore file: use .git/info/exclude when this is a git repo.
+EXCLUDE_FILE=""
+if [ -d .git ]; then
+  mkdir -p .git/info
+  EXCLUDE_FILE=".git/info/exclude"
+  if [ ! -f "${EXCLUDE_FILE}" ]; then
+    touch "${EXCLUDE_FILE}"
+  fi
+else
+  echo "Warning: .git not found; skip exclude entries (use .git/info/exclude after git init)."
 fi
 
-# Добавляем запись в .gitignore, если её ещё нет.
-# Append entry to .gitignore when it is missing.
-ensure_ignore_entry() {
+ensure_exclude_entry() {
   local entry="$1"
-  if ! grep -Fxq "${entry}" .gitignore; then
-    echo "${entry}" >> .gitignore
-    echo "Added '${entry}' to .gitignore"
+  if [ -z "${EXCLUDE_FILE}" ]; then
+    return
+  fi
+  if ! grep -Fxq "${entry}" "${EXCLUDE_FILE}"; then
+    echo "${entry}" >> "${EXCLUDE_FILE}"
+    echo "Added '${entry}' to ${EXCLUDE_FILE}"
   fi
 }
 
-ensure_ignore_entry "AGENTS.md"
-ensure_ignore_entry "local/"
-ensure_ignore_entry "local/chat_context.md"
-ensure_ignore_entry ".github/copilot-instructions.md"
-ensure_ignore_entry ".gemini/GEMINI.md"
-ensure_ignore_entry "GEMINI.md"
-ensure_ignore_entry "QWEN.md"
-ensure_ignore_entry ".qwen/QWEN.md"
+if [ -n "${EXCLUDE_FILE}" ] && [ -f .gitignore ]; then
+  entries=()
+  in_block=0
+  while IFS= read -r line; do
+    if [[ "${line}" == "# BEGIN EXCLUDE LIST (for .git/info/exclude)"* ]]; then
+      in_block=1
+      continue
+    fi
+    if [[ "${line}" == "# END EXCLUDE LIST"* ]]; then
+      in_block=0
+      break
+    fi
+    if [[ "${in_block}" -eq 1 && "${line}" == \#* ]]; then
+      entry="${line#\# }"
+      if [ -n "${entry}" ]; then
+        entries+=("${entry}")
+      fi
+    fi
+  done < .gitignore
+  if [[ ${#entries[@]} -gt 0 ]]; then
+    for entry in "${entries[@]}"; do
+      ensure_exclude_entry "${entry}"
+    done
+  fi
+fi
 
 # Проверяем наличие скрытого HTML-комментария в README и напоминаем при необходимости.
 # Remind the maintainer about the hidden HTML comment if README lacks it.
-if ! grep -F "MUST немедленно изучить файлы" README.md >/dev/null 2>&1; then
+if ! grep -F "AI AGENT PROTOCOL TRIGGER" README.md >/dev/null 2>&1; then
   cat <<'EOF'
 Не забудьте добавить скрытый HTML-комментарий для ассистентов в README.
 Скопируйте его из README_snippet.md или README.md текущего шаблона.
@@ -61,22 +88,39 @@ else
 fi
 
 cat <<'EOF'
-Напоминание: настройте каталоги local/<assistant-name>/, создайте sessions.log и requests.log и согласуйте точность времени согласно разделу Quick Start.
-Reminder: prepare local/<assistant-name>/ directories, create sessions.log and requests.log, and align timestamp precision as described in the Quick Start section.
+Напоминание: настройте каталоги local/ai/<assistant-name>/, создайте sessions.log и requests.log и согласуйте точность времени согласно разделу Quick Start.
+Reminder: prepare local/ai/<assistant-name>/ directories, create sessions.log and requests.log, and align timestamp precision as described in the Quick Start section.
 EOF
 
 # Индикатор готовности / Readiness marker
-READY_FILE="local/bootstrap.ready"
-if [[ -f "$READY_FILE" ]]; then
-  echo "true" > "$READY_FILE"
-else
-  mkdir -p local
-  echo "true" > "$READY_FILE"
-fi
-echo "local/bootstrap.ready set to $(cat "$READY_FILE")"
+READY_FILE="local/ai/bootstrap.ready"
+mkdir -p local/ai
+{
+  echo "true"
+  if [ -n "${EXCLUDE_FILE}" ] && [ -f .gitignore ]; then
+    in_block=0
+    while IFS= read -r line; do
+      if [[ "${line}" == "# BEGIN EXCLUDE LIST (for .git/info/exclude)"* ]]; then
+        in_block=1
+        continue
+      fi
+      if [[ "${line}" == "# END EXCLUDE LIST"* ]]; then
+        in_block=0
+        break
+      fi
+      if [[ "${in_block}" -eq 1 && "${line}" == \#* ]]; then
+        entry="${line#\# }"
+        if [ -n "${entry}" ]; then
+          echo "${entry}"
+        fi
+      fi
+    done < .gitignore
+  fi
+} > "$READY_FILE"
+echo "local/ai/bootstrap.ready set"
 
 # Убедимся, что в chat_context есть блок статуса / Ensure readiness block exists
-CHAT_CONTEXT="local/chat_context.md"
+CHAT_CONTEXT="local/ai/chat_context.md"
 if [[ -f "$CHAT_CONTEXT" ]] && ! grep -Fq "## Статус готовности / Readiness status" "$CHAT_CONTEXT"; then
   tmp_body="$(mktemp)"
   cp "$CHAT_CONTEXT" "$tmp_body"

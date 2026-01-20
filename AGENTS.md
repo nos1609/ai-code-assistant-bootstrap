@@ -12,26 +12,26 @@
   **EN:** Once `AGENTS.md` and `{{CHAT_CONTEXT_FILE}}` are found, immediately execute “Initial Session Protocol,” comply with `{{CHAT_CONTEXT_FILE}}`, start logging, and introduce yourself per the agreed rules.
 
 ### Ускоренный старт / Accelerated Start
-- **RU:** Перед стартом проверь индикатор `local/bootstrap.ready` или статус готовности в `{{CHAT_CONTEXT_FILE}}`. Если он равен `completed`, базовые проверки уже выполнены и можно переходить к задаче пользователя после короткого подтверждения.
+- **RU:** Перед стартом проверь индикатор `local/ai/bootstrap.ready` или статус готовности в `{{CHAT_CONTEXT_FILE}}`. Если он равен `completed`, базовые проверки уже выполнены и можно переходить к задаче пользователя после короткого подтверждения.
 
-  **EN:** Check `local/bootstrap.ready` or the readiness status inside `{{CHAT_CONTEXT_FILE}}`. When it says `completed`, consider the bootstrap checklist satisfied and proceed to the user task after a brief acknowledgement.
+  **EN:** Check `local/ai/bootstrap.ready` or the readiness status inside `{{CHAT_CONTEXT_FILE}}`. When it says `completed`, consider the bootstrap checklist satisfied and proceed to the user task after a brief acknowledgement.
 
 ### Условия пропуска протокола / Protocol Skip Conditions
-- **RU:** Допускается пропустить повторное выполнение начального протокола, если `local/bootstrap.ready` содержит `true` **и** блок `Readiness status` в `{{CHAT_CONTEXT_FILE}}` зафиксирован как `completed` с актуальными `last_verified_at` и `agents_md_hash`.
+- **RU:** Допускается пропустить повторное выполнение начального протокола, если `local/ai/bootstrap.ready` содержит `true` **и** блок `Readiness status` в `{{CHAT_CONTEXT_FILE}}` зафиксирован как `completed` с актуальными `last_verified_at` и `agents_md_hash`.
 
-  **EN:** You may skip re-running the startup protocol when `local/bootstrap.ready` is `true` **and** the `Readiness status` block in `{{CHAT_CONTEXT_FILE}}` shows `completed` with up-to-date `last_verified_at` and `agents_md_hash`.
+  **EN:** You may skip re-running the startup protocol when `local/ai/bootstrap.ready` is `true` **and** the `Readiness status` block in `{{CHAT_CONTEXT_FILE}}` shows `completed` with up-to-date `last_verified_at` and `agents_md_hash`.
 
 ### Предполетный чек-лист / Pre-flight Checklist
 
-- **RU:** [ ] Прочитать `local/chat_context.md`.
+- **RU:** [ ] Прочитать `local/ai/chat_context.md`.
 
-  **EN:** [ ] Read `local/chat_context.md`.
-- **RU:** [ ] Подтвердить ключевые договорённости из `local/chat_context.md`.
+  **EN:** [ ] Read `local/ai/chat_context.md`.
+- **RU:** [ ] Подтвердить ключевые договорённости из `local/ai/chat_context.md`.
 
-  **EN:** [ ] Acknowledge key agreements from `local/chat_context.md`.
-- **RU:** [ ] Проверить, есть ли проектные дополнения (например, `local/project_addenda.md`) и учесть их указания.
+  **EN:** [ ] Acknowledge key agreements from `local/ai/chat_context.md`.
+- **RU:** [ ] Проверить, есть ли проектные дополнения (например, `local/ai/project_addenda.md`) и учесть их указания.
 
-  **EN:** [ ] Check for any project addenda (for example, `local/project_addenda.md`) and follow their guidance.
+  **EN:** [ ] Check for any project addenda (for example, `local/ai/project_addenda.md`) and follow their guidance.
 - **RU:** [ ] Если в репозитории уже есть инструкции (`{{LEGACY_INSTRUCTIONS}}`), прочитать их и выписать действующие договорённости, чтобы позже перенести их в `{{CHAT_CONTEXT_FILE}}`/`{{SESSION_HISTORY_FILE}}`.
 
   **EN:** [ ] When existing instructions are present (`{{LEGACY_INSTRUCTIONS}}`), review them and note active agreements for later migration into `{{CHAT_CONTEXT_FILE}}`/`{{SESSION_HISTORY_FILE}}`.
@@ -45,14 +45,17 @@
   **EN:** Tick items only after the user explicitly agrees; state which step you are confirming.
 - [ ] **Шаг 1 / Step 1.** **RU:** Перечитать `{{CHAT_CONTEXT_FILE}}` целиком и в ответе указать дату/время последнего чтения; подтвердить, что блок `Readiness status` содержит поля `status`, `last_verified_at` (ISO 8601 UTC) и `agents_md_hash`.
   **EN:** Re-read `{{CHAT_CONTEXT_FILE}}` end-to-end, report when it was last reviewed, and confirm the `Readiness status` block includes `status`, ISO 8601 `last_verified_at`, and `agents_md_hash`.
-- [ ] **Шаг 1a / Step 1a.** **RU:** Запусти bootstrap-проверку (`scripts/bootstrap_check.sh` в Bash или `scripts/bootstrap_check.ps1` в PowerShell) и сошлись на результате; при недоступности перечисли ручные проверки (README-комментарий, симлинки, `.gitignore`, логи).
-  **EN:** Run the bootstrap check (`scripts/bootstrap_check.sh` on Bash or `scripts/bootstrap_check.ps1` on PowerShell) and reference its outcome; if unavailable, describe the equivalent manual checks (README comment, symlinks, `.gitignore`, logs).
+- [ ] **Шаг 1a / Step 1a.** **RU:** Запусти bootstrap-проверку (`local/ai/scripts/bootstrap_check.sh` в Bash или `local/ai/scripts/bootstrap_check.ps1` в PowerShell) и сошлись на результате; при недоступности перечисли ручные проверки (README-комментарий, симлинки, `.git/info/exclude`, логи).
+  **EN:** Run the bootstrap check (`local/ai/scripts/bootstrap_check.sh` on Bash or `local/ai/scripts/bootstrap_check.ps1` on PowerShell) and reference its outcome; if unavailable, describe the equivalent manual checks (README comment, symlinks, `.git/info/exclude`, logs).
+- **RU:** При интеграции или обновлении шаблона проверь, что список в `.git/info/exclude` соответствует блоку `BEGIN/END EXCLUDE LIST` в `.gitignore`.
+
+  **EN:** When integrating or updating the template, verify that `.git/info/exclude` matches the `BEGIN/END EXCLUDE LIST` block in `.gitignore`.
 - [ ] **Шаг 2 / Step 2.** **RU:** Проверить наличие скрытого HTML-комментария из `README_snippet.md` в `{{PRIMARY_README}}`; при отсутствии согласовать восстановление.
   **EN:** Check that `{{PRIMARY_README}}` contains the hidden HTML comment from `README_snippet.md`; align on restoring it if missing.
 - [ ] **Шаг 3 / Step 3.** **RU:** Убедиться, что симлинки ассистентов (`{{ASSISTANT_SYMLINKS_LIST}}`) корректно указывают на `AGENTS.md` относительными путями.
   **EN:** Ensure assistant symlinks (`{{ASSISTANT_SYMLINKS_LIST}}`) point to `AGENTS.md` using relative paths.
-- [ ] **Шаг 4 / Step 4.** **RU:** Создать для каждого ассистента (`gemini`, `qwen`, `codex`, `copilot`) каталоги `local/<assistant>/` с логами `sessions.log`, `requests.log` в формате JSONL (минимум `timestamp`, `request_id`, `assistant`, `summary/status`, `tools`), применять ISO 8601 UTC (`YYYY-MM-DDTHH:MM:SSZ`) и фиксировать назначение логирования (`audit/context replay`).
-  **EN:** For every assistant (`gemini`, `qwen`, `codex`, `copilot`) create `local/<assistant>/sessions.log` and `local/<assistant>/requests.log` (JSONL, minimum fields `timestamp`, `request_id`, `assistant`, `summary/status`, `tools`) using ISO 8601 UTC (`YYYY-MM-DDTHH:MM:SSZ`) and document the logging purpose (`audit/context replay`).
+- [ ] **Шаг 4 / Step 4.** **RU:** Создать для каждого ассистента (`gemini`, `qwen`, `codex`, `copilot`) каталоги `local/ai/<assistant>/` с логами `sessions.log`, `requests.log` в формате JSONL (минимум `timestamp`, `request_id`, `assistant`, `summary/status`, `tools`), применять ISO 8601 UTC (`YYYY-MM-DDTHH:MM:SSZ`) и фиксировать назначение логирования (`audit/context replay`).
+  **EN:** For every assistant (`gemini`, `qwen`, `codex`, `copilot`) create `local/ai/<assistant>/sessions.log` and `local/ai/<assistant>/requests.log` (JSONL, minimum fields `timestamp`, `request_id`, `assistant`, `summary/status`, `tools`) using ISO 8601 UTC (`YYYY-MM-DDTHH:MM:SSZ`) and document the logging purpose (`audit/context replay`).
 - [ ] **Шаг 5 / Step 5.** **RU:** Уточнить текущую задачу и критичные области репозитория без повторения сведений из «Краткой памятки».
   **EN:** Clarify the current task and critical repository areas without duplicating the “Quick profile” information.
 - [ ] **Шаг 6 / Step 6.** **RU:** После консультаций очистить временные каталоги инструментов (`{{TEMP_TOOL_DIRS}}`), чтобы не оставлять лишние конфигурации.
@@ -77,9 +80,9 @@
 - **RU:** Любое выполнение инструментов, создающих файлы вне рабочей директории (например, `~/.<tool>` или глобальные кеши), требует эскалации; в заявке перечисли команды и ожидаемый результат.
 
   **EN:** Running tools that write outside the workspace (e.g., `~/.<tool>` or global caches) requires escalation; list the commands and expected outcomes in your request.
-- **RU:** Если инструмент поддерживает переопределение каталога (`--data-dir`, `--config-dir` и т.п.), направь его в `{{TEMP_TOOL_DIRS}}`, опиши процедуру очистки и согласуй копирование/симлинк токенов при нужде; путь добавь в `.gitignore`.
+- **RU:** Если инструмент поддерживает переопределение каталога (`--data-dir`, `--config-dir` и т.п.), направь его в `{{TEMP_TOOL_DIRS}}`, опиши процедуру очистки и согласуй копирование/симлинк токенов при нужде; путь добавь в `.git/info/exclude`.
 
-  **EN:** When the tool offers directory overrides (`--data-dir`, `--config-dir`, etc.), route it to `{{TEMP_TOOL_DIRS}}`, describe the cleanup, and agree on copying/symlinking tokens if needed; ensure the path is git-ignored.
+  **EN:** When the tool offers directory overrides (`--data-dir`, `--config-dir`, etc.), route it to `{{TEMP_TOOL_DIRS}}`, describe the cleanup, and agree on copying/symlinking tokens if needed; add the path to `.git/info/exclude`.
 
 **Пример запроса / Sample request**
 Justification: Need to inspect CLI configs outside workspace for troubleshooting.
@@ -89,21 +92,24 @@ Commands:
 
 ## Общие требования / General Requirements
 
-- **RU:** [P0_CRITICAL] Всегда сначала читай [local/chat_context.md](local/chat_context.md); при конфликте с правилами ниже следуй именно ему и сообщай пользователю о расхождениях.
+- **RU:** [P0_CRITICAL] Всегда сначала читай [local/ai/chat_context.md](local/ai/chat_context.md); при конфликте с правилами ниже следуй именно ему и сообщай пользователю о расхождениях.
 
-  **EN:** [P0_CRITICAL] Always read [local/chat_context.md](local/chat_context.md) first; if it conflicts with the rules below, follow it and inform the user about any deviations.
-- **RU:** [P1_IMPORTANT] Раздел «Краткая памятка» в `local/chat_context.md` содержит подтверждённые язык, род, окружение, доступность CLI и статус логирования; опирайся на него вместо повторных вопросов.
+  **EN:** [P0_CRITICAL] Always read [local/ai/chat_context.md](local/ai/chat_context.md) first; if it conflicts with the rules below, follow it and inform the user about any deviations.
+- **RU:** [P1_IMPORTANT] Раздел «Краткая памятка» в `local/ai/chat_context.md` содержит подтверждённые язык, род, окружение, доступность CLI и статус логирования; опирайся на него вместо повторных вопросов.
 
-  **EN:** [P1_IMPORTANT] The “Quick profile” section in `local/chat_context.md` lists the confirmed language, gender, environment, CLI availability, and logging status; rely on it instead of re-asking.
-- **RU:** [P2_BEST_PRACTICE] Подробная хронология, полезные ссылки и список изменений ведутся в `local/session_history.md`; обновляй его вместе с контекстом при появлении новых данных.
+  **EN:** [P1_IMPORTANT] The “Quick profile” section in `local/ai/chat_context.md` lists the confirmed language, gender, environment, CLI availability, and logging status; rely on it instead of re-asking.
+- **RU:** [P2_BEST_PRACTICE] Подробная хронология, полезные ссылки и список изменений ведутся в `local/ai/session_history.md`; обновляй его вместе с контекстом при появлении новых данных.
 
-  **EN:** [P2_BEST_PRACTICE] Detailed history, helpful links, and change tracking live in `local/session_history.md`; update it alongside the context when new information appears.
+  **EN:** [P2_BEST_PRACTICE] Detailed history, helpful links, and change tracking live in `local/ai/session_history.md`; update it alongside the context when new information appears.
 - **RU:** Учитывай двуязычный формат инструкции: при правках поддерживай синхронность русской и английской формулировок, сохраняя общий смысл и структуру.
 
   **EN:** Respect the bilingual layout of this guide: when editing, update the Russian and English versions together, keeping their meaning and structure aligned.
-- **RU:** Перед стандартными уточнениями (род, окружение, детализация, доступность CLI) сверяйся с `local/chat_context.md`; если сведения уже зафиксированы, подтверди их и предложи обновить при изменениях.
+- **RU:** Перед стандартными уточнениями (род, окружение, детализация, доступность CLI) сверяйся с `local/ai/chat_context.md`; если сведения уже зафиксированы, подтверди их и предложи обновить при изменениях.
 
-  **EN:** Before asking the standard clarification questions (gender, environment, detail level, CLI availability), consult `local/chat_context.md`; when information is already recorded, acknowledge it and invite updates if something changed.
+  **EN:** Before asking the standard clarification questions (gender, environment, detail level, CLI availability), consult `local/ai/chat_context.md`; when information is already recorded, acknowledge it and invite updates if something changed.
+- **RU:** При запросах «инициализируй/разверни шаблон/подтяни bootstrap» **не** заменяй `README*` на шаблонные версии; остальные файлы добавляй или дополняй, избегая перезаписи без явного указания.
+
+  **EN:** For “initialize/apply the template/bootstrap,” **do not** replace existing `README*` with template copies; for other files, add or extend rather than overwrite unless explicitly instructed.
 - **RU:** Первое сообщение пиши на языке, указанном в локальных указаниях. Если язык не задан, определи его по запросу пользователя, попроси подтвердить или выбрать другой и придерживайся согласованного варианта.
 
   **EN:** Use the language defined in the local directives for the first reply. If none is specified, detect the user’s language, ask them to confirm or choose another, and stick to the agreed choice.
@@ -119,9 +125,9 @@ Commands:
 - **RU:** Не делай предположений об уровне подготовки пользователя; уточняй, насколько подробно пояснять шаги, чтобы помощь была доступна даже новичкам.
 
   **EN:** Avoid assuming the user’s expertise level; ask how much detail they want so the guidance stays understandable even for newcomers.
-- **RU:** Перед началом курса работы перечитай этот файл и [local/chat_context.md](local/chat_context.md), чтобы восстановить актуальные договорённости; при первой сессии опирайся на доступные локальные подсказки и документацию как шпаргалку.
+- **RU:** Перед началом курса работы перечитай этот файл и [local/ai/chat_context.md](local/ai/chat_context.md), чтобы восстановить актуальные договорённости; при первой сессии опирайся на доступные локальные подсказки и документацию как шпаргалку.
 
-  **EN:** Before you start working, re-read this file and [local/chat_context.md](local/chat_context.md) to refresh active agreements; in your first session lean on any available local references or documentation as a quick-start aid.
+  **EN:** Before you start working, re-read this file and [local/ai/chat_context.md](local/ai/chat_context.md) to refresh active agreements; in your first session lean on any available local references or documentation as a quick-start aid.
 - **RU:** Используй только ASCII при создании или изменении файлов, если проект явно не требует Unicode.
 
   **EN:** Use ASCII when creating or editing files unless Unicode is explicitly required by the project.
@@ -154,59 +160,46 @@ Commands:
 - **RU:** Создай симлинки [.github/copilot-instructions.md](.github/copilot-instructions.md) и [.gemini/GEMINI.md](.gemini/GEMINI.md), указывающие на [AGENTS.md](AGENTS.md).
 
   **EN:** Create symlinks [.github/copilot-instructions.md](.github/copilot-instructions.md) and [.gemini/GEMINI.md](.gemini/GEMINI.md) pointing to [AGENTS.md](AGENTS.md).
-- **RU:** Убедись, что [.gitignore](.gitignore) скрывает [AGENTS.md](AGENTS.md), каталог `local/` и симлинки ассистентов.
+- **RU:** Убедись, что `.git/info/exclude` скрывает [AGENTS.md](AGENTS.md), каталог `local/ai/` и симлинки ассистентов, но **не** скрывает весь каталог `.github/` (workflow-файлы должны оставаться в репозитории).
 
-  **EN:** Ensure [.gitignore](.gitignore) hides [AGENTS.md](AGENTS.md), the `local/` directory, and the assistant symlinks.
-- **RU:** При интеграции шаблона в другую репозиторию добавь служебные пути в `.git/info/exclude`, чтобы не менять `.gitignore` проекта; скопируй блок ниже и расширяй его по мере необходимости.
+  **EN:** Ensure `.git/info/exclude` hides [AGENTS.md](AGENTS.md), the `local/ai/` directory, and the assistant symlinks, but **does not** ignore the entire `.github/` directory (GitHub Actions/workflows must remain tracked).
+- **RU:** При интеграции шаблона в другой репозиторий добавь служебные пути в `.git/info/exclude`, чтобы не менять `.gitignore` проекта; скопируй блок ниже и расширяй его по мере необходимости.
 
   **EN:** When integrating the template elsewhere, add the service paths to `.git/info/exclude` instead of touching the project `.gitignore`; copy the block below and extend it as needed.
-  ```
-  AGENTS.md
-  local/
-  local/chat_context.md
-  local/project_addenda.md
-  local/session_history.md
-  local/session_summaries/
-  !local/scripts/
-  local/bootstrap.ready
-  local/*/sessions.log
-  local/*/requests.log
-  README.md
-  README.en.md
-  CONTRIBUTING.md
-  CONTRIBUTING.en.md
-  README_snippet.md
-  .github/copilot-instructions.md
-  .gemini/
-  GEMINI.md
-  QWEN.md
-  .qwen/
-  tmp/
-  tmp/assistant_contexts/
-  tmp/consultation_runs/
-  tmp/gemini_home
-  tmp/qwen_home
-  tmp/copilot_home
-  tmp/cli_tokens
-  scripts/
-  ```
-- **RU:** После завершения подготовки обнови [local/chat_context.md](local/chat_context.md), зафиксировав выполненные шаги.
+  **RU:** При первичной интеграции скопируй строки из блока `BEGIN/END EXCLUDE LIST` из `.gitignore` в `.git/info/exclude` (убрав префикс `# `) — это список **только служебных файлов шаблона ассистентов**, не пользовательских данных. Init обновляет `local/ai/bootstrap.ready` так: первая строка `true`, далее только элементы списка. После интеграции поддерживай актуальные исключения только в `.git/info/exclude`.
+  **EN:** On initial integration, copy the entries from the `BEGIN/END EXCLUDE LIST` block in `.gitignore` into `.git/info/exclude` (remove the leading `# `) — this list is **only for assistant template artifacts**, not user content. Init updates `local/ai/bootstrap.ready` with `true` on the first line and only list entries after that. After integration, maintain the live exclusions only in `.git/info/exclude`.
+- **RU:** После завершения подготовки обнови [local/ai/chat_context.md](local/ai/chat_context.md), зафиксировав выполненные шаги.
 
-  **EN:** After the bootstrap steps, update [local/chat_context.md](local/chat_context.md) to document what was done.
+  **EN:** After the bootstrap steps, update [local/ai/chat_context.md](local/ai/chat_context.md) to document what was done.
+
+## VS Code Copilot: файлы инструкций / VS Code Copilot: instruction files
+
+- **RU:** VS Code поддерживает несколько типов файлов инструкций: `.github/copilot-instructions.md`, `*.instructions.md` и `AGENTS.md`; при наличии нескольких типов порядок применения не гарантируется.
+
+  **EN:** VS Code supports multiple instruction file types: `.github/copilot-instructions.md`, `*.instructions.md`, and `AGENTS.md`; when several types exist, the application order is not guaranteed.
+- **RU:** Инструкции влияют на чат/генерацию кода, но **не** применяются к inline suggestions (автодополнение).
+
+  **EN:** Instructions affect chat/code generation but **do not** apply to inline suggestions (autocomplete).
+- **RU:** `.github/copilot-instructions.md` применяется в чате при включённом `github.copilot.chat.codeGeneration.useInstructionFiles` и также распознаётся в Visual Studio и на GitHub.com.
+
+  **EN:** `.github/copilot-instructions.md` is used in chat when `github.copilot.chat.codeGeneration.useInstructionFiles` is enabled and is also recognized in Visual Studio and on GitHub.com.
+- **RU:** `AGENTS.md` применяется при включённом `chat.useAgentsMdFile`; вложенные `AGENTS.md` подключаются экспериментально через `chat.useNestedAgentsMdFiles`.
+
+  **EN:** `AGENTS.md` is used when `chat.useAgentsMdFile` is enabled; nested `AGENTS.md` files are experimental via `chat.useNestedAgentsMdFiles`.
 
 ## Универсальные расширения / Universal Enhancements
-- **RU:** Используйте [local/project_addenda.md](local/project_addenda.md) как мастер-шаблон: опишите матрицу окружений (ОС, права, инструменты), правила разрешённых/запрещённых действий, политику логирования (`sessions.log`, `requests.log`) и каталоги для токенов/CLI. Все блоки оставляйте двуязычными и помечайте плейсхолдерами, если проект ещё не заполнил значения.
+- **RU:** Используйте [local/ai/project_addenda.md](local/ai/project_addenda.md) как мастер-шаблон: опишите матрицу окружений (ОС, права, инструменты), правила разрешённых/запрещённых действий, политику логирования (`sessions.log`, `requests.log`) и каталоги для токенов/CLI. Все блоки оставляйте двуязычными и помечайте плейсхолдерами, если проект ещё не заполнил значения.
 
-  **EN:** Treat [local/project_addenda.md](local/project_addenda.md) as the authoritative template: document the environment matrix (OS, privileges, tooling), allow/deny rules, logging policy (`sessions.log`, `requests.log`), and CLI token directories. Keep the RU/EN layout in sync and mark placeholders until the project supplies real values.
-- **RU:** [local/chat_context.md](local/chat_context.md) должен содержать предзаполненные разделы «Системные указания», «Краткая памятка», «Разрешённые противоречия» и чек-лист для `local/session_summaries/<ISO8601>.md`. Новые проекты лишь подставляют фактический язык, род и окружение.
+  **EN:** Treat [local/ai/project_addenda.md](local/ai/project_addenda.md) as the authoritative template: document the environment matrix (OS, privileges, tooling), allow/deny rules, logging policy (`sessions.log`, `requests.log`), and CLI token directories. Keep the RU/EN layout in sync and mark placeholders until the project supplies real values.
+- **RU:** [local/ai/chat_context.md](local/ai/chat_context.md) должен содержать предзаполненные разделы «Системные указания», «Краткая памятка», «Разрешённые противоречия» и чек-лист для `local/ai/session_summaries/<ISO8601>.md`. Новые проекты лишь подставляют фактический язык, род и окружение.
 
-  **EN:** Ensure [local/chat_context.md](local/chat_context.md) ships with populated sections (“System directives,” “Quick profile,” “Resolved contradictions,” and the session-summary checklist) so downstream repos only replace the concrete language/gender/environment values.
-- **RU:** Приложите образцы JSONL-логов (`local/<assistant>/sessions.log`, `local/<assistant>/requests.log`) с корректными полями (`timestamp`, `request_id`, `assistant`, `summary`, `tools`, `status`) и ISO 8601 форматом (`YYYY-MM-DDTHH:MM:SSZ`), чтобы ассистенты видели ожидаемый формат.
+  **EN:** Ensure [local/ai/chat_context.md](local/ai/chat_context.md) ships with populated sections (“System directives,” “Quick profile,” “Resolved contradictions,” and the session-summary checklist) so downstream repos only replace the concrete language/gender/environment values.
+- **RU:** Приложите образцы JSONL-логов (`local/ai/<assistant>/sessions.log`, `local/ai/<assistant>/requests.log`) с корректными полями (`timestamp`, `request_id`, `assistant`, `summary`, `tools`, `status`) и ISO 8601 форматом (`YYYY-MM-DDTHH:MM:SSZ`), чтобы ассистенты видели ожидаемый формат.
 
-  **EN:** Include sample JSONL log entries (`local/<assistant>/sessions.log`, `local/<assistant>/requests.log`) demonstrating the required fields (`timestamp`, `request_id`, `assistant`, `summary`, `tools`, `status`) and ISO 8601 timestamps so every agent knows the target structure.
-- **RU:** При необходимости добавляйте проектные скрипты консультаций в `local/scripts/` и используйте `tmp/consultation_runs/`, `tmp/assistant_contexts/` для артефактов многоагентных запусков.
+  **EN:** Include sample JSONL log entries (`local/ai/<assistant>/sessions.log`, `local/ai/<assistant>/requests.log`) demonstrating the required fields (`timestamp`, `request_id`, `assistant`, `summary`, `tools`, `status`) and ISO 8601 timestamps so every agent knows the target structure.
+- **RU:** При необходимости добавляйте проектные скрипты консультаций в `local/ai/scripts/` и используйте `tmp/ai/consultation_runs/`, `tmp/ai/assistant_contexts/` для артефактов многоагентных запусков.
 
-  **EN:** When needed, place project-specific consultation scripts under `local/scripts/` and store multi-assistant artifacts in `tmp/consultation_runs/` and `tmp/assistant_contexts/`.
+  **EN:** When needed, place project-specific consultation scripts under `local/ai/scripts/` and store multi-assistant artifacts in `tmp/ai/consultation_runs/` and `tmp/ai/assistant_contexts/`.
 
 ## Протокол начала сессии / Initial Session Protocol
 
@@ -214,28 +207,28 @@ Commands:
 
 **EN:** At the start of each session, the agent must perform the following sequence of actions:
 
-1. **RU:** Прочитать `local/chat_context.md`, чтобы восстановить актуальные договорённости.
-   **EN:** Read `local/chat_context.md` to restore the active agreements.
+1. **RU:** Прочитать `local/ai/chat_context.md`, чтобы восстановить актуальные договорённости.
+   **EN:** Read `local/ai/chat_context.md` to restore the active agreements.
 
 2. **RU:** Выполнить все шаги из раздела «Первичная настройка / Repository Bootstrap».
    **EN:** Execute every step from the “Первичная настройка / Repository Bootstrap” section.
 
-3. **RU:** Обновить `local/chat_context.md`, задокументировав выполненные шаги первичной настройки.
-   **EN:** Update `local/chat_context.md`, documenting the completed bootstrap steps.
+3. **RU:** Обновить `local/ai/chat_context.md`, задокументировав выполненные шаги первичной настройки.
+   **EN:** Update `local/ai/chat_context.md`, documenting the completed bootstrap steps.
 
-4. **RU:** Подтвердить ознакомление с разделом «Логирование обращений / Logging Requests» в `AGENTS.md` и `local/chat_context.md`, инициировать логирование сессии.
-   **EN:** Confirm familiarity with the “Логирование обращений / Logging Requests” section in `AGENTS.md` and `local/chat_context.md`, and initiate session logging.
+4. **RU:** Подтвердить ознакомление с разделом «Логирование обращений / Logging Requests» в `AGENTS.md` и `local/ai/chat_context.md`, инициировать логирование сессии.
+   **EN:** Confirm familiarity with the “Логирование обращений / Logging Requests” section in `AGENTS.md` and `local/ai/chat_context.md`, and initiate session logging.
 
-5. **RU:** Представить "Приветственное сообщение": попросить переформулировать задачу своими словами и назвать критичные файлы/директории, избегая вопросов, уже отражённых в `local/chat_context.md`.
-   **EN:** Deliver the "Greeting Message": ask the user to restate the task in their own words and name critical files/directories, avoiding questions already covered in `local/chat_context.md`.
+5. **RU:** Представить "Приветственное сообщение": попросить переформулировать задачу своими словами и назвать критичные файлы/директории, избегая вопросов, уже отражённых в `local/ai/chat_context.md`.
+   **EN:** Deliver the "Greeting Message": ask the user to restate the task in their own words and name critical files/directories, avoiding questions already covered in `local/ai/chat_context.md`.
 
 ## Рабочий процесс / Workflow
 
-1. **RU:** В начале каждой сессии прочитай [local/chat_context.md](local/chat_context.md), затем при необходимости изучи [README.md](README.md).
-   **EN:** At the start of each session, read [local/chat_context.md](local/chat_context.md) and, when helpful, review [README.md](README.md).
+1. **RU:** В начале каждой сессии прочитай [local/ai/chat_context.md](local/ai/chat_context.md), затем при необходимости изучи [README.md](README.md).
+   **EN:** At the start of each session, read [local/ai/chat_context.md](local/ai/chat_context.md) and, when helpful, review [README.md](README.md).
 
-2. **RU:** Когда появляются новые договорённости или выводы, обновляй [local/chat_context.md](local/chat_context.md) и сообщай об этом пользователю.
-   **EN:** Whenever new agreements or conclusions arise, update [local/chat_context.md](local/chat_context.md) and inform the user.
+2. **RU:** Когда появляются новые договорённости или выводы, обновляй [local/ai/chat_context.md](local/ai/chat_context.md) и сообщай об этом пользователю.
+   **EN:** Whenever new agreements or conclusions arise, update [local/ai/chat_context.md](local/ai/chat_context.md) and inform the user.
    - **RU:** Вноси новые договорённости сразу, не откладывая до конца сессии.
 
      **EN:** Record new agreements immediately instead of waiting until the end of the session.
@@ -243,8 +236,8 @@ Commands:
 3. **RU:** Подтверждай доступность локальных CLI-ассистентов (`gemini`, `qwen`, `codex`, `copilot`) и их режим работы; при согласии используйте выбранные инструменты для сложных задач.
    **EN:** Confirm the availability and operating mode of local CLI assistants (`gemini`, `qwen`, `codex`, `copilot`); use the agreed tool for complex tasks.
 
-4. **RU:** Перед выполнением команд уточняй у пользователя необходимость эскалации; команды (кроме чтения файлов и заранее одобренных логирующих вроде `date -u`, `echo >> local/...`) выполняй только после подтверждения.
-   **EN:** Discuss escalation needs with the user before running commands; execute commands (except file reads and pre-approved logging such as `date -u`, `echo >> local/...`) only after obtaining approval.
+4. **RU:** Перед выполнением команд уточняй у пользователя необходимость эскалации; команды (кроме чтения файлов и заранее одобренных логирующих вроде `date -u`, `echo >> local/ai/...`) выполняй только после подтверждения.
+   **EN:** Discuss escalation needs with the user before running commands; execute commands (except file reads and pre-approved logging such as `date -u`, `echo >> local/ai/...`) only after obtaining approval.
 
 5. **RU:** Запускай релевантные проверки и тесты до финального ответа или прямо сообщай, что проверки не выполнялись.
    **EN:** Run relevant checks and tests before the final response, or state explicitly that none were run.
@@ -252,29 +245,29 @@ Commands:
 6. **RU:** Сообщай пользователю, какие файлы и строки изменены, и предлагай осмысленные следующие шаги (какие тесты запустить, что перепроверить).
    **EN:** Tell the user which files and lines changed, and suggest sensible next steps (tests to run, follow-up checks).
 
-7. **RU:** Фиксируй ключевые шаги и решения в `local/session_history.md`; при появлении новых правил обновляй `local/chat_context.md`.
-   **EN:** Record key steps and decisions in `local/session_history.md`; update `local/chat_context.md` whenever agreements change.
+7. **RU:** Фиксируй ключевые шаги и решения в `local/ai/session_history.md`; при появлении новых правил обновляй `local/ai/chat_context.md`.
+   **EN:** Record key steps and decisions in `local/ai/session_history.md`; update `local/ai/chat_context.md` whenever agreements change.
 
 ### Протокол взаимодействия ассистентов / Inter-assistant protocol
 
-- **RU:** Перед подключением другого ассистента передай пакет контекста: ссылки на `AGENTS.md`, `local/chat_context.md` (раздел «Краткая памятка»), `local/session_history.md` и краткое описание доступных CLI-инструментов.
+- **RU:** Перед подключением другого ассистента передай пакет контекста: ссылки на `AGENTS.md`, `local/ai/chat_context.md` (раздел «Краткая памятка»), `local/ai/session_history.md` и краткое описание доступных CLI-инструментов.
 
-  **EN:** Before involving another assistant, share a context package: links to `AGENTS.md`, `local/chat_context.md` (its “Quick profile” section), `local/session_history.md`, and a short overview of available CLI tools.
-- **RU:** Согласуй правила логирования: напомни вести `local/<имя>/sessions.log` и `local/<имя>/requests.log`, после обмена проверь, что записи созданы.
+  **EN:** Before involving another assistant, share a context package: links to `AGENTS.md`, `local/ai/chat_context.md` (its “Quick profile” section), `local/ai/session_history.md`, and a short overview of available CLI tools.
+- **RU:** Согласуй правила логирования: напомни вести `local/ai/<имя>/sessions.log` и `local/ai/<имя>/requests.log`, после обмена проверь, что записи созданы.
 
-  **EN:** Align on logging: remind them to append `local/<name>/sessions.log` and `local/<name>/requests.log`, and confirm the entries exist after the exchange.
+  **EN:** Align on logging: remind them to append `local/ai/<name>/sessions.log` and `local/ai/<name>/requests.log`, and confirm the entries exist after the exchange.
 - **RU:** Если нужно обратиться сразу к нескольким ассистентам, запроси одну эскалацию на весь набор команд: перечисли все вызовы CLI (одна команда — одна строка) и используй единое обоснование; после одобрения выполняй команды последовательно.
 
   **EN:** When you need input from multiple assistants, request a single escalation covering the whole batch: list every CLI invocation (one command per line) with a shared justification; once approved, run the commands in sequence.
 - **RU:** При распределении задач между ассистентами фиксируй роли и очередь (кто консультирует, кто проверяет), чтобы избежать конфликтов.
 
   **EN:** When assigning tasks across assistants, document roles and sequencing (who advises, who verifies) to prevent conflicts.
-- **RU:** По завершении консультации законспектируй выводы в `local/session_history.md` и при необходимости обнови `local/chat_context.md`.
+- **RU:** По завершении консультации законспектируй выводы в `local/ai/session_history.md` и при необходимости обнови `local/ai/chat_context.md`.
 
-  **EN:** After the consultation, summarize the findings in `local/session_history.md` and update `local/chat_context.md` when needed.
-- **RU:** Допустимы только недеструктивные правки `{{CHAT_CONTEXT_FILE}}` и `{{SESSION_HISTORY_FILE}}` без эскалации; любые удаления, переписывание истории или изменения `.gitignore`/симлинков согласовывай отдельно. Простейшие телеметрийные команды (например, `date -u`) запускай только с разрешения.
+  **EN:** After the consultation, summarize the findings in `local/ai/session_history.md` and update `local/ai/chat_context.md` when needed.
+- **RU:** Допустимы только недеструктивные правки `{{CHAT_CONTEXT_FILE}}` и `{{SESSION_HISTORY_FILE}}` без эскалации; любые удаления, переписывание истории или изменения `.git/info/exclude`/симлинков согласовывай отдельно. Простейшие телеметрийные команды (например, `date -u`) запускай только с разрешения.
 
-  **EN:** Only non-destructive edits to `{{CHAT_CONTEXT_FILE}}` and `{{SESSION_HISTORY_FILE}}` are allowed without escalation; deletions, history rewrites, or edits to `.gitignore`/symlinks require explicit approval. Even trivial telemetry commands (e.g., `date -u`) need user consent.
+  **EN:** Only non-destructive edits to `{{CHAT_CONTEXT_FILE}}` and `{{SESSION_HISTORY_FILE}}` are allowed without escalation; deletions, history rewrites, or edits to `.git/info/exclude`/symlinks require explicit approval. Even trivial telemetry commands (e.g., `date -u`) need user consent.
 
 ### Передача контекста / Context handoff
 - **RU:** Используй чек-лист ниже при передаче задачи; отмечай выполнение в `{{SESSION_HISTORY_FILE}}`.
@@ -283,9 +276,9 @@ Commands:
 - **RU:** Перед запуском внешних CLI убедись, что собран актуальный контекст (модели, ключи, ограничения) и получено разрешение на создание временных каталогов у домашнего пользователя.
 
   **EN:** Before running external CLIs, ensure the context (models, keys, limits) is up to date and permission to create home-level temp directories is granted.
-- **RU:** Для пакетных консультаций используйте проектные инструменты из `local/scripts/` (укажите пути и параметры в `{{PROJECT_ADDENDA_FILE}}`), складывайте сырые логи в `tmp/consultation_runs/`, обработанные — в `tmp/assistant_contexts/`.
+- **RU:** Для пакетных консультаций используйте проектные инструменты из `local/ai/scripts/` (укажите пути и параметры в `{{PROJECT_ADDENDA_FILE}}`), складывайте сырые логи в `tmp/ai/consultation_runs/`, обработанные — в `tmp/ai/assistant_contexts/`.
 
-  **EN:** For batch consultations use project-specific tools from `local/scripts/` (document paths/args in `{{PROJECT_ADDENDA_FILE}}`); store raw logs in `tmp/consultation_runs/` and processed outputs in `tmp/assistant_contexts/`.
+  **EN:** For batch consultations use project-specific tools from `local/ai/scripts/` (document paths/args in `{{PROJECT_ADDENDA_FILE}}`); store raw logs in `tmp/ai/consultation_runs/` and processed outputs in `tmp/ai/assistant_contexts/`.
 
 | Пункт / Item | Инструкция (RU) | Instruction (EN) |
 | --- | --- | --- |
@@ -310,11 +303,11 @@ Commands:
 2. **RU:** Перепроверь `{{CHAT_CONTEXT_FILE}}` и актуальные записи `{{SESSION_HISTORY_FILE}}`, чтобы все договорённости были зафиксированы.
    **EN:** Review `{{CHAT_CONTEXT_FILE}}` and recent `{{SESSION_HISTORY_FILE}}` entries to ensure agreements are captured.
 
-3. **RU:** Создай каталог `{{SESSION_SUMMARY_DIR}}`, если его нет (каталог должен быть в `.gitignore`).
-   **EN:** Create `{{SESSION_SUMMARY_DIR}}` if missing (the directory must be git-ignored).
+3. **RU:** Создай каталог `{{SESSION_SUMMARY_DIR}}`, если его нет (каталог должен быть в `.git/info/exclude`).
+   **EN:** Create `{{SESSION_SUMMARY_DIR}}` if missing (the directory must be in `.git/info/exclude`).
 
-4. **RU:** Сформируй `{{SESSION_SUMMARY_DIR}}/<ISO8601>.md` (`YYYY-MM-DDTHH:MM:SSZ`) со структурой: «Контекст», «Системные указания», «Ключевые файлы» (формат `path:line` + комментарий), «Последние события», «Проблемы и решения», «Рекомендации / Следующие шаги» (чек-лист), «Дополнительные материалы» (логи/ответы CLI, например `tmp/<tool>_*.txt`), «Открытые вопросы».
-   **EN:** Create `{{SESSION_SUMMARY_DIR}}/<ISO8601>.md` (`YYYY-MM-DDTHH:MM:SSZ`) using the layout: “Context”, “System directives”, “Key files” (`path:line` + note), “Recent events”, “Issues & fixes”, “Recommendations / Next steps” (checklist), “Additional materials” (CLI logs/answers such as `tmp/<tool>_*.txt`), “Pending items”.
+4. **RU:** Сформируй `{{SESSION_SUMMARY_DIR}}/<ISO8601>.md` (`YYYY-MM-DDTHH:MM:SSZ`) со структурой: «Контекст», «Системные указания», «Ключевые файлы» (формат `path:line` + комментарий), «Последние события», «Проблемы и решения», «Рекомендации / Следующие шаги» (чек-лист), «Дополнительные материалы» (логи/ответы CLI, например `tmp/ai/<tool>_*.txt`), «Открытые вопросы».
+   **EN:** Create `{{SESSION_SUMMARY_DIR}}/<ISO8601>.md` (`YYYY-MM-DDTHH:MM:SSZ`) using the layout: “Context”, “System directives”, “Key files” (`path:line` + note), “Recent events”, “Issues & fixes”, “Recommendations / Next steps” (checklist), “Additional materials” (CLI logs/answers such as `tmp/ai/<tool>_*.txt`), “Pending items”.
 
 5. **RU:** Добавь запись в `{{SESSION_HISTORY_FILE}}` со ссылкой на сводку.
    **EN:** Append an entry to `{{SESSION_HISTORY_FILE}}` referencing the summary.
@@ -364,15 +357,15 @@ Commands:
 - **RU:** Добавлены шаги в `{{SESSION_HISTORY_FILE}}`, `{{CHAT_CONTEXT_FILE}}` отражает новые договорённости.
 
   **EN:** `{{SESSION_HISTORY_FILE}}` includes the latest steps; new agreements appear in `{{CHAT_CONTEXT_FILE}}`.
-- **RU:** Проверено отсутствие секретов/PII, временные артефакты очищены или добавлены в `.gitignore`.
+- **RU:** Проверено отсутствие секретов/PII, временные артефакты очищены или добавлены в `.git/info/exclude`.
 
-  **EN:** Verified no secrets/PII remain and temporary artifacts are cleaned or ignored.
+  **EN:** Verified no secrets/PII remain and temporary artifacts are cleaned or listed in `.git/info/exclude`.
 - **RU:** Для ручных действий подготовлены пошаговые инструкции и команды, готовые к копированию.
 
   **EN:** Manual steps documented with copy-ready commands.
-- **RU:** При hand-off создана сводка `local/session_summaries/<ISO8601>.md` с открытыми вопросами и рекомендациями.
+- **RU:** При hand-off создана сводка `local/ai/session_summaries/<ISO8601>.md` с открытыми вопросами и рекомендациями.
 
-  **EN:** On hand-off, a `local/session_summaries/<ISO8601>.md` summary exists with open questions and recommendations.
+  **EN:** On hand-off, a `local/ai/session_summaries/<ISO8601>.md` summary exists with open questions and recommendations.
 
 ## Проверки и инструменты / Checks and Tooling
 
@@ -388,9 +381,9 @@ Commands:
 - **RU:** Если проверка невозможна из-за ограничений или отсутствия инструмента, явно сообщи об этом пользователю и предложи выполнить её вручную.
 
   **EN:** If a check cannot be run due to restrictions or missing tools, state it clearly and suggest the user run it manually.
-- **RU:** На основе профиля проекта (`{{PROJECT_PROFILE}}`) используй таблицу типовых команд ниже; конкретные значения вынеси в `local/project_addenda.md`.
+- **RU:** На основе профиля проекта (`{{PROJECT_PROFILE}}`) используй таблицу типовых команд ниже; конкретные значения вынеси в `local/ai/project_addenda.md`.
 
-  **EN:** Use the table below according to the project profile (`{{PROJECT_PROFILE}}`); place concrete commands in `local/project_addenda.md`.
+  **EN:** Use the table below according to the project profile (`{{PROJECT_PROFILE}}`); place concrete commands in `local/ai/project_addenda.md`.
 
 | **RU:** Профиль | **RU:** Команды / шаблоны | **EN:** Profile | **EN:** Commands / templates |
 | --- | --- | --- | --- |
@@ -441,30 +434,30 @@ Commands:
 - **RU:** Определяй цель ведения логов (отладка, аудит, метрики) и фиксируй её в документации перед включением сбора.
 
   **EN:** Define the purpose of logging (debugging, audit, metrics) and document it before enabling collection.
-- **RU:** Логирование считается включённым по умолчанию; отключение возможно только отдельной договорённостью, отражённой в `local/chat_context.md`.
+- **RU:** Логирование считается включённым по умолчанию; отключение возможно только отдельной договорённостью, отражённой в `local/ai/chat_context.md`.
 
-  **EN:** Logging is enabled by default; turn it off only with an explicit agreement captured in `local/chat_context.md`.
+  **EN:** Logging is enabled by default; turn it off only with an explicit agreement captured in `local/ai/chat_context.md`.
 - **RU:** Структура JSONL: `sessions.log` — `session_id`, `started_at`, `assistant`, `language`, `gender`, `logging_precision`; `requests.log` — `timestamp` (ISO 8601 UTC), `request_id`, `assistant`, `tools`, `status`, опционально `error_details`/`short_context`.
 
   **EN:** JSONL fields: `sessions.log` — `session_id`, `started_at`, `assistant`, `language`, `gender`, `logging_precision`; `requests.log` — `timestamp` (ISO 8601 UTC), `request_id`, `assistant`, `tools`, `status`, optional `error_details`/`short_context`.
-- **RU:** После подтверждения рабочего языка и рода фиксируй старт сессии: создавай запись в журнале `local/<имя ассистента>/sessions.log` (или аналогичном файле) с уникальным идентификатором, временем начала, выбранным языком, родом и, при hand-off, полями `handoff_from`/`handoff_to`.
+- **RU:** После подтверждения рабочего языка и рода фиксируй старт сессии: создавай запись в журнале `local/ai/<имя ассистента>/sessions.log` (или аналогичном файле) с уникальным идентификатором, временем начала, выбранным языком, родом и, при hand-off, полями `handoff_from`/`handoff_to`.
 
-  **EN:** After confirming language and grammatical gender, capture the session start: write an entry to `local/<assistant-name>/sessions.log` (or equivalent) with a unique ID, start time, chosen language, gender, and `handoff_from`/`handoff_to` when passing work between assistants.
-- **RU:** Если каталог `local/<имя ассистента>` или нужные файлы отсутствуют, создай их перед первой записью, сохраняя структуру репозитория.
+  **EN:** After confirming language and grammatical gender, capture the session start: write an entry to `local/ai/<assistant-name>/sessions.log` (or equivalent) with a unique ID, start time, chosen language, gender, and `handoff_from`/`handoff_to` when passing work between assistants.
+- **RU:** Если каталог `local/ai/<имя ассистента>` или нужные файлы отсутствуют, создай их перед первой записью, сохраняя структуру репозитория.
 
-  **EN:** If `local/<assistant-name>` or the required log files are missing, create them before the first entry while keeping the repository structure.
+  **EN:** If `local/ai/<assistant-name>` or the required log files are missing, create them before the first entry while keeping the repository structure.
 - **RU:** Если логирование активно, в первом ответе автоматически запроси явное разрешение на запись точных отметок времени или длительности обработки; при отказе веди только базовые журналы.
 
   **EN:** When logging is enabled, ask for explicit approval in the first reply before recording precise timestamps or processing durations; if refused, keep only baseline logs.
-- **RU:** Для записи точных отметок времени отдельных запросов или длительности обработки получи подтверждение пользователя и зафиксируй его в `local/chat_context.md` перед расширением логов.
+- **RU:** Для записи точных отметок времени отдельных запросов или длительности обработки получи подтверждение пользователя и зафиксируй его в `local/ai/chat_context.md` перед расширением логов.
 
-  **EN:** Before logging per-request timestamps or processing durations, capture the user’s approval and record it in `local/chat_context.md`.
+  **EN:** Before logging per-request timestamps or processing durations, capture the user’s approval and record it in `local/ai/chat_context.md`.
 - **RU:** Записи в `sessions.log` и `requests.log` веди в формате JSONL (одна запись на строку) с ISO 8601 UTC `timestamp`; добавляй поле `summary`/`short_context`, отражающее цель сессии или суть запроса.
 
   **EN:** Keep `sessions.log` and `requests.log` as JSONL (one entry per line) with ISO 8601 UTC timestamps; include a `summary`/`short_context` field capturing the session purpose or request intent.
-- **RU:** При полученном согласии фиксируй КАЖДОЕ обращение к ассистенту в `local/<имя ассистента>/requests.log`: используй отметку времени в ISO 8601 (UTC), идентификатор или тип обращения, краткий контекст (1-2 фразы), пометку об инструментах и итоговый статус (`success`, `warning`, `error`). Придерживайся ASCII и не записывай чувствительные данные.
+- **RU:** При полученном согласии фиксируй КАЖДОЕ обращение к ассистенту в `local/ai/<имя ассистента>/requests.log`: используй отметку времени в ISO 8601 (UTC), идентификатор или тип обращения, краткий контекст (1-2 фразы), пометку об инструментах и итоговый статус (`success`, `warning`, `error`). Придерживайся ASCII и не записывай чувствительные данные.
 
-  **EN:** With consent, log EVERY interaction in `local/<assistant-name>/requests.log`: include an ISO 8601 UTC timestamp, interaction ID/type, a 1-2 sentence context, tools used, and a final status (`success`, `warning`, `error`). Stick to ASCII and omit sensitive data.
+  **EN:** With consent, log EVERY interaction in `local/ai/<assistant-name>/requests.log`: include an ISO 8601 UTC timestamp, interaction ID/type, a 1-2 sentence context, tools used, and a final status (`success`, `warning`, `error`). Stick to ASCII and omit sensitive data.
 - **RU:** Используй таблицу ниже как шпаргалку по файлам и полям; при необходимости расширяй её проектными полями (`duration_ms`, `error_details_redacted` и т.п.), фиксируя изменения в `{{CHAT_CONTEXT_FILE}}`.
 
   **EN:** Use the table below as a cheat sheet for files and fields; extend it with project-specific columns (`duration_ms`, `error_details_redacted`, etc.) and record changes in `{{CHAT_CONTEXT_FILE}}`.
@@ -481,30 +474,30 @@ Commands:
 - **RU:** Если CLI не умеет писать файлы (например, инструмент работает без доступа к домашнему каталогу), письменно зафиксируй невозможность в ответе пользователю и продолжай работу без локальных логов, пока не появится доступ.
 
   **EN:** When a CLI cannot write files (for example, the tool lacks home-directory access), note it explicitly in your reply and continue without local logs until access is granted.
-- **RU:** Храни журналы в подпапке `local/<имя ассистента>` или во внешнем хранилище с ограниченным доступом; фиксируй формат и расположение в локальных инструкциях.
+- **RU:** Храни журналы в подпапке `local/ai/<имя ассистента>` или во внешнем хранилище с ограниченным доступом; фиксируй формат и расположение в локальных инструкциях.
 
-  **EN:** Store logs under `local/<assistant-name>` or in restricted external storage; document the format and location in the local guidelines.
+  **EN:** Store logs under `local/ai/<assistant-name>` or in restricted external storage; document the format and location in the local guidelines.
 - **RU:** Устанавливай сроки хранения и процессы ротации, обеспечивай возможность удаления записей по запросу пользователя.
 
   **EN:** Define retention periods and rotation processes, and keep a path to delete entries on user request.
 - **RU:** Перед анализом логов убеждайся, что обработка чувствительных данных соответствует политике безопасности и действующим законам.
 
   **EN:** Before analyzing logs, ensure handling of sensitive data complies with the security policy and applicable regulations.
-- **RU:** Если обращаешься к другому ассистенту, требуй, чтобы он вёл свои журналы (`local/<имя>/requests.log`, `sessions.log`) по тем же правилам и подтверждай, что записи созданы.
+- **RU:** Если обращаешься к другому ассистенту, требуй, чтобы он вёл свои журналы (`local/ai/<имя>/requests.log`, `sessions.log`) по тем же правилам и подтверждай, что записи созданы.
 
-  **EN:** When you call another assistant, ensure they keep their own logs (`local/<name>/requests.log`, `sessions.log`) under the same rules and confirm the entries exist.
-- **RU:** Перед отправкой ответа убедись, что текущий запрос уже записан в `local/<имя ассистента>/requests.log`; если записи нет, добавь её отдельной командой немедленно.
+  **EN:** When you call another assistant, ensure they keep their own logs (`local/ai/<name>/requests.log`, `sessions.log`) under the same rules and confirm the entries exist.
+- **RU:** Перед отправкой ответа убедись, что текущий запрос уже записан в `local/ai/<имя ассистента>/requests.log`; если записи нет, добавь её отдельной командой немедленно.
 
-  **EN:** Before sending a reply, make sure the current interaction is already stored in `local/<assistant-name>/requests.log`; if it is missing, append it immediately using a dedicated command.
+  **EN:** Before sending a reply, make sure the current interaction is already stored in `local/ai/<assistant-name>/requests.log`; if it is missing, append it immediately using a dedicated command.
 - **RU:** **ВАЖНО:** Команды логирования (например, `echo '...' >> .../requests.log`) выполняй отдельным вызовом `run_shell_command`; остальные команды запускай только после согласования.
 
   **EN:** **IMPORTANT:** Execute logging commands (e.g., `echo '...' >> .../requests.log`) in a separate `run_shell_command`; run all other commands only after approval.
 
 ## Управление контекстом / Context Management
 
-- **RU:** Держи `local/session_history.md` как единственный источник истины: добавляй хронологию шагов, ссылки и выводы.
+- **RU:** Держи `local/ai/session_history.md` как единственный источник истины: добавляй хронологию шагов, ссылки и выводы.
 
-  **EN:** Treat `local/session_history.md` as the single source of truth: append chronological steps, references, and findings there.
+  **EN:** Treat `local/ai/session_history.md` as the single source of truth: append chronological steps, references, and findings there.
 - **RU:** Пользуйся инструментами поиска и диффа контекста, как только они будут добавлены, чтобы быстро находить прошлые договорённости.
 
   **EN:** Use the context search and diff tools as soon as they are available to retrieve past agreements quickly.
@@ -517,9 +510,9 @@ Commands:
 
 ## Проектные дополнения / Project-Specific Extensions
 
-- **RU:** Если в репозитории есть дополнительные инструкции (например, `local/project_addenda.md` или `docs/assistant-addenda/`), сообщи об этом пользователю и действуй по ним после согласования.
+- **RU:** Если в репозитории есть дополнительные инструкции (например, `local/ai/project_addenda.md` или `docs/assistant-addenda/`), сообщи об этом пользователю и действуй по ним после согласования.
 
-  **EN:** If the repository provides extra instructions (for example, `local/project_addenda.md` or `docs/assistant-addenda/`), inform the user and follow them once aligned.
+  **EN:** If the repository provides extra instructions (for example, `local/ai/project_addenda.md` or `docs/assistant-addenda/`), inform the user and follow them once aligned.
 - **RU:** При отсутствии явных дополнений уточни у пользователя, нужно ли учитывать внешние документы или рабочие соглашения.
 
   **EN:** When no addenda exist, confirm with the user whether external documents or working agreements apply.
@@ -544,18 +537,18 @@ Commands:
 
 ## Синхронизация с апстримом / Upstream Sync
 
-- **RU:** Сверяй `AGENTS.md`, `README*.md`, `CONTRIBUTING*.md`, `README_snippet.md`, `local/scripts/*` с эталоном `{{TEMPLATE_UPSTREAM_URL}}` с частотой `{{UPSTREAM_CHECK_FREQUENCY}}` или при значимых изменениях.
+- **RU:** Сверяй `AGENTS.md`, `README*.md`, `CONTRIBUTING*.md`, `README_snippet.md`, `local/ai/scripts/*` с эталоном `{{TEMPLATE_UPSTREAM_URL}}` с частотой `{{UPSTREAM_CHECK_FREQUENCY}}` или при значимых изменениях.
 
-  **EN:** Compare `AGENTS.md`, `README*.md`, `CONTRIBUTING*.md`, `README_snippet.md`, `local/scripts/*` with the canonical `{{TEMPLATE_UPSTREAM_URL}}` every `{{UPSTREAM_CHECK_FREQUENCY}}` or after major updates.
+  **EN:** Compare `AGENTS.md`, `README*.md`, `CONTRIBUTING*.md`, `README_snippet.md`, `local/ai/scripts/*` with the canonical `{{TEMPLATE_UPSTREAM_URL}}` every `{{UPSTREAM_CHECK_FREQUENCY}}` or after major updates.
 - **RU:** Фиксируй расхождения и решения в `{{SESSION_HISTORY_FILE}}`, а итоговые договорённости — в `{{CHAT_CONTEXT_FILE}}`.
 
   **EN:** Record differences and decisions in `{{SESSION_HISTORY_FILE}}`, and capture resulting agreements in `{{CHAT_CONTEXT_FILE}}`.
 - **RU:** При каждой сверке записывай ISO-время проверки, хэш текущего `AGENTS.md` и список проверенных файлов в `{{SESSION_HISTORY_FILE}}`; в ответах указывай дату/хэш проверки.
 
   **EN:** For each sync, log the ISO timestamp, current `AGENTS.md` hash, and checked files in `{{SESSION_HISTORY_FILE}}`; include the date/hash in user-facing replies.
-- **RU:** Не перезаписывай локальные дополнения (`local/**`, `{{PROJECT_ADDENDA_FILE}}`, специфичные разделы README); вместо этого помечай их как локальные расширения.
+- **RU:** Не перезаписывай локальные дополнения (`local/ai/**`, `{{PROJECT_ADDENDA_FILE}}`, специфичные разделы README); вместо этого помечай их как локальные расширения.
 
-  **EN:** Do not overwrite local addenda (`local/**`, `{{PROJECT_ADDENDA_FILE}}`, repo-specific README sections); mark them as local extensions instead.
+  **EN:** Do not overwrite local addenda (`local/ai/**`, `{{PROJECT_ADDENDA_FILE}}`, repo-specific README sections); mark them as local extensions instead.
 - **RU:** При обновлении шаблона публикуй краткий отчёт (что подтянутo, какие шаги требуются) и договаривайся о внедрении с командой.
 
   **EN:** When syncing the template, share a brief report (what was pulled, required follow-ups) and align with the team on rollout.

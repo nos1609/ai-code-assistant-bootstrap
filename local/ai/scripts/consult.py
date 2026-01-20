@@ -6,21 +6,21 @@ RU: Оркестратор для консультаций с нескольки
 EN: Orchestrator for multi-assistant AI consultations.
 
 RU: Скрипт реализует два этапа:
-  1. execute — собирает контекст (AGENTS.md, local/chat_context.md,
-     local/project_addenda.md, local/session_history.md), формирует команды
+  1. execute — собирает контекст (AGENTS.md, local/ai/chat_context.md,
+     local/ai/project_addenda.md, local/ai/session_history.md), формирует команды
      для указанных ассистентов и запускает их параллельно. Каждый процесс
-     получает единый префикс-подсказку и пишет вывод в `tmp/consultation_runs/<ID>/*.raw.log`.
+     получает единый префикс-подсказку и пишет вывод в `tmp/ai/consultation_runs/<ID>/*.raw.log`.
   2. process — обрабатывает накопленные логи: опционально вызывает
-     `local/scripts/trim_consult_logs.py`, сохраняет компактные JSONL и добавляет
-     краткую запись в `local/session_history.md`.
+     `local/ai/scripts/trim_consult_logs.py`, сохраняет компактные JSONL и добавляет
+     краткую запись в `local/ai/session_history.md`.
 
 EN: The script runs in two stages:
-  1. execute — gather context (AGENTS.md, local/chat_context.md,
-     local/project_addenda.md, local/session_history.md), spawn the
+  1. execute — gather context (AGENTS.md, local/ai/chat_context.md,
+     local/ai/project_addenda.md, local/ai/session_history.md), spawn the
      requested assistants in parallel, and capture their raw JSON logs.
   2. process — post-process those logs (optionally via
-     `local/scripts/trim_consult_logs.py`) and append a summary to
-     `local/session_history.md`.
+     `local/ai/scripts/trim_consult_logs.py`) and append a summary to
+     `local/ai/session_history.md`.
 """
 
 from __future__ import annotations
@@ -42,9 +42,9 @@ from typing import Dict, List, Sequence, Tuple
 
 CONTEXT_FILES = [
     "AGENTS.md",
-    "local/project_addenda.md",
-    "local/chat_context.md",
-    "local/session_history.md",
+    "local/ai/project_addenda.md",
+    "local/ai/chat_context.md",
+    "local/ai/session_history.md",
 ]
 
 RUNS_DIR = Path("tmp", "consultation_runs")
@@ -287,7 +287,7 @@ def main() -> None:
     proc_parser = subparsers.add_parser(
         "process", help="RU: обработать логи / EN: process logs"
     )
-    proc_parser.add_argument("run_id", help="ID из директории tmp/consultation_runs")
+    proc_parser.add_argument("run_id", help="ID из директории tmp/ai/consultation_runs")
     proc_parser.set_defaults(func=process_stage)
 
     args = parser.parse_args()
@@ -296,3 +296,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

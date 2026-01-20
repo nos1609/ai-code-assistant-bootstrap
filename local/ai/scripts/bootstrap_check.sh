@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# RU: Проверяет базовые bootstrap-требования (README комментарий, симлинки, .gitignore, логи).
-# EN: Verifies baseline bootstrap requirements (README comment, symlinks, .gitignore, logs).
+# RU: Проверяет базовые bootstrap-требования (README комментарий, симлинки, .git/info/exclude, логи).
+# EN: Verifies baseline bootstrap requirements (README comment, symlinks, .git/info/exclude, logs).
 set -euo pipefail
 
 if command -v rg >/dev/null 2>&1; then
@@ -89,27 +89,50 @@ check_symlinks() {
   done
 }
 
+load_patterns_from_bootstrap_ready() {
+  local file="local/ai/bootstrap.ready"
+  patterns=()
+  if [[ ! -f "$file" ]]; then
+    fail "local/ai/bootstrap.ready отсутствует" "local/ai/bootstrap.ready missing"
+    return 1
+  fi
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    [[ "$line" == "true" ]] && continue
+    patterns+=("$line")
+  done < "$file"
+  if [[ ${#patterns[@]} -eq 0 ]]; then
+    fail "local/ai/bootstrap.ready не содержит списка exclude" "local/ai/bootstrap.ready missing exclude list"
+    return 1
+  fi
+  return 0
+}
+
 check_gitignore() {
-  # RU: Убеждаемся, что .gitignore скрывает служебные файлы ассистента.
-  # EN: Confirm .gitignore hides all assistant artifacts.
-  local patterns=(
-    "AGENTS.md"
-    "local/"
-    ".github/copilot-instructions.md"
-    ".gemini/GEMINI.md"
-    "GEMINI.md"
-    "QWEN.md"
-    ".qwen/QWEN.md"
-  )
+  # RU: Убеждаемся, что .git/info/exclude скрывает служебные файлы ассистента.  
+  # EN: Confirm .git/info/exclude hides all assistant artifacts.
+  local ignore_file=""
+  if ! load_patterns_from_bootstrap_ready; then
+    return
+  fi
+  if [[ -f ".git/info/exclude" ]]; then
+    ignore_file=".git/info/exclude"
+  elif [[ -d ".git" ]]; then
+    fail "Файл .git/info/exclude отсутствует" ".git/info/exclude missing"
+    return
+  else
+    warn "Git не инициализирован; проверка ignore-файла пропущена" "Git not initialized; ignore check skipped"
+    return
+  fi
   local missing=0
   for pat in "${patterns[@]}"; do
-    if ! contains_fixed_gitignore "$pat" .gitignore; then
-      fail ".gitignore не содержит $pat" ".gitignore missing $pat"
+    if ! contains_fixed_gitignore "$pat" "$ignore_file"; then
+      fail "$ignore_file не содержит $pat" "$ignore_file missing $pat"
       missing=1
     fi
   done
   if [[ $missing -eq 0 ]]; then
-    ok ".gitignore скрывает служебные файлы" ".gitignore covers assistant artifacts"
+    ok "$ignore_file скрывает служебные файлы" "$ignore_file covers assistant artifacts"
   fi
 }
 
@@ -118,7 +141,7 @@ check_logs() {
   # EN: Validate logs exist and contain ISO 8601 UTC timestamps.
   shopt -s nullglob
   local found=0
-  for log in local/*/{sessions.log,requests.log}; do
+  for log in local/ai/*/{sessions.log,requests.log}; do
     found=1
     if matches_iso "$log"; then
       ok "$log содержит ISO 8601 UTC" "$log format valid"
@@ -127,7 +150,7 @@ check_logs() {
     fi
   done
   if [[ $found -eq 0 ]]; then
-    warn "Логи ассистентов не найдены" "No assistant logs found in local/*/{sessions,requests}.log"
+    warn "Логи ассистентов не найдены" "No assistant logs found in local/ai/*/{sessions,requests}.log"
   fi
 }
 
