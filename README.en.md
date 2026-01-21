@@ -98,7 +98,7 @@ After the bootstrap, review the “Quick Start,” “Environment Limits,” “
 ## Integrating into an Existing Repository
 
 1. Back up the current instruction files (`AGENTS.md`, `local/chat_context.md`, `local/project_addenda.md`, `docs/assistant-*.md`, etc.) and diff them against the template.
-2. Do not copy or replace `README.md`/`README.en.md`. If a README already exists, only add the hidden HTML snippet from `README_snippet.md`. If there is no README, create a minimal one and insert the snippet without copying the template text.
+2. Do not copy or replace `README.md`/`README.en.md`. See the rule in `AGENTS.md` (P0) and Step 2 in `local/ai/agents/01-bootstrap.md`.
 3. Carry over active agreements and constraints into the relevant placeholders (`{{LEGACY_INSTRUCTIONS}}`, `{{CHAT_CONTEXT_FILE}}`, `{{PROJECT_ADDENDA_FILE}}`).
 4. Review existing logs or runbooks to enrich the first-session context (working language, sandbox modes, escalation policy, available CLIs).
 5. Ensure creating temp directories (`{{TEMP_TOOL_DIRS}}`, `~/.<tool>`) is allowed or plan an escalation alternative if not; capture the `--data-dir`/`--config-dir` overrides that keep files inside the repo.
