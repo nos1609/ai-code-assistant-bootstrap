@@ -3,11 +3,11 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$repoRoot = Resolve-Path (Join-Path $scriptDir "..\\..")
+$repoRoot = Resolve-Path (Join-Path $scriptDir "..\\..\\..")
 Set-Location $repoRoot
 
 # Ensure directories for symlink targets exist.
-New-Item -ItemType Directory -Force .github, .gemini, .qwen | Out-Null
+New-Item -ItemType Directory -Force .github, .claude, .gemini, .qwen | Out-Null
 
 # Ensure local temp workspace exists.
 New-Item -ItemType Directory -Force "tmp/ai" | Out-Null
@@ -15,6 +15,8 @@ New-Item -ItemType Directory -Force "tmp/ai" | Out-Null
 # Refresh symlinks so every assistant reads the same instructions.
 $links = @(
     @{ Path = ".github/copilot-instructions.md"; Target = "../AGENTS.md" },
+    @{ Path = ".claude/CLAUDE.md"; Target = "../AGENTS.md" },
+    @{ Path = "CLAUDE.md"; Target = "AGENTS.md" },
     @{ Path = ".gemini/GEMINI.md"; Target = "../AGENTS.md" },
     @{ Path = "GEMINI.md"; Target = "AGENTS.md" },
     @{ Path = "QWEN.md"; Target = "AGENTS.md" },

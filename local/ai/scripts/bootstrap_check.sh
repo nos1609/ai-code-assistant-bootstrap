@@ -32,9 +32,9 @@ contains_fixed_gitignore() {
 matches_iso() {
   local file=$1
   if [[ $USE_RG -eq 1 ]]; then
-    rg -q '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z' "$file"
+    rg -q '([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z|YYYY-MM-DDTHH:MM:SSZ)' "$file"
   else
-    grep -Eq '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z' "$file"
+    grep -Eq '([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z|YYYY-MM-DDTHH:MM:SSZ)' "$file"
   fi
 }
 
@@ -79,6 +79,8 @@ check_symlinks() {
   # EN: Iterate through all required assistant symlinks.
   local links=(
     ".github/copilot-instructions.md"
+    ".claude/CLAUDE.md"
+    "CLAUDE.md"
     ".gemini/GEMINI.md"
     "GEMINI.md"
     "QWEN.md"
@@ -91,6 +93,7 @@ check_symlinks() {
 
 load_patterns_from_bootstrap_ready() {
   local file="local/ai/bootstrap.ready"
+  local marker=""
   patterns=()
   if [[ ! -f "$file" ]]; then
     fail "local/ai/bootstrap.ready отсутствует" "local/ai/bootstrap.ready missing"
@@ -98,18 +101,25 @@ load_patterns_from_bootstrap_ready() {
   fi
   while IFS= read -r line; do
     [[ -z "$line" ]] && continue
-    [[ "$line" == "true" ]] && continue
+    if [[ "$line" == "true" || "$line" == "false" ]]; then
+      [[ -z "$marker" ]] && marker="$line"
+      continue
+    fi
     patterns+=("$line")
   done < "$file"
   if [[ ${#patterns[@]} -eq 0 ]]; then
-    fail "local/ai/bootstrap.ready не содержит списка exclude" "local/ai/bootstrap.ready missing exclude list"
+    if [[ "$marker" == "false" ]]; then
+      warn "local/ai/bootstrap.ready помечает шаблон как неразвёрнутый" "local/ai/bootstrap.ready marks template as not bootstrapped"
+    else
+      fail "local/ai/bootstrap.ready не содержит списка exclude" "local/ai/bootstrap.ready missing exclude list"
+    fi
     return 1
   fi
   return 0
 }
 
 check_gitignore() {
-  # RU: Убеждаемся, что .git/info/exclude скрывает служебные файлы ассистента.  
+  # RU: Убеждаемся, что .git/info/exclude скрывает служебные файлы ассистента.
   # EN: Confirm .git/info/exclude hides all assistant artifacts.
   local ignore_file=""
   if ! load_patterns_from_bootstrap_ready; then

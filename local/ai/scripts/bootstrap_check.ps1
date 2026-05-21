@@ -28,6 +28,8 @@ if (-not (Test-Path README.md)) {
 
 $links = @(
     ".github/copilot-instructions.md",
+    ".claude/CLAUDE.md",
+    "CLAUDE.md",
     ".gemini/GEMINI.md",
     "GEMINI.md",
     "QWEN.md",
@@ -49,16 +51,31 @@ foreach ($link in $links) {
 
 $patterns = @()
 $readyFile = "local/ai/bootstrap.ready"
+$readyMarker = $null
 if (-not (Test-Path -LiteralPath $readyFile)) {
     Write-Fail "local/ai/bootstrap.ready отсутствует" "local/ai/bootstrap.ready missing"
 } else {
     foreach ($line in Get-Content -LiteralPath $readyFile) {
-        if (-not [string]::IsNullOrWhiteSpace($line) -and $line -ne "true") {
-            $patterns += $line
+        $trimmed = $line.Trim()
+        if ([string]::IsNullOrWhiteSpace($trimmed)) {
+            continue
+        }
+        if ($trimmed -in @("true", "false")) {
+            if ($null -eq $readyMarker) {
+                $readyMarker = $trimmed
+            }
+            continue
+        }
+        if ($trimmed) {
+            $patterns += $trimmed
         }
     }
     if (-not $patterns) {
-        Write-Fail "local/ai/bootstrap.ready не содержит списка exclude" "local/ai/bootstrap.ready missing exclude list"
+        if ($readyMarker -eq "false") {
+            Write-Warn "local/ai/bootstrap.ready помечает шаблон как неразвёрнутый" "local/ai/bootstrap.ready marks template as not bootstrapped"
+        } else {
+            Write-Fail "local/ai/bootstrap.ready не содержит списка exclude" "local/ai/bootstrap.ready missing exclude list"
+        }
     }
 }
 
@@ -88,8 +105,9 @@ $logs = Get-ChildItem -Path "local/ai" -Filter "*.log" -Recurse -ErrorAction Sil
 if (-not $logs) {
     Write-Warn "Логи ассистентов не найдены в local/" "No assistant logs found under local/"
 } else {
+    $timestampPattern = '([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z|YYYY-MM-DDTHH:MM:SSZ)'
     foreach ($log in $logs) {
-        if (-not (Select-String -LiteralPath $log.FullName -Pattern '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z' -Quiet)) {
+        if (-not (Select-String -LiteralPath $log.FullName -Pattern $timestampPattern -Quiet)) {
             Write-Fail "$($log.FullName) не содержит ISO 8601 UTC" "$($log.FullName) missing ISO timestamps"
         } else {
             Write-Ok "$($log.FullName) содержит ISO 8601 UTC" "$($log.FullName) format valid"

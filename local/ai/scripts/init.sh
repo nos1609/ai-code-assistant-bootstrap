@@ -5,13 +5,13 @@ set -euo pipefail
 # Helper script that prepares symlinks and .git/info/exclude entries for the agent template.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 
 cd "${REPO_ROOT}"
 
 # Гарантируем наличие каталогов, куда будут складываться симлинки.
 # Ensure directories for symlink targets exist.
-mkdir -p .github .gemini .qwen
+mkdir -p .github .claude .gemini .qwen
 
 # Ensure local temp workspace exists.
 mkdir -p tmp/ai
@@ -19,6 +19,8 @@ mkdir -p tmp/ai
 # Обновляем симлинки на единый набор инструкций для разных ассистентов.
 # Refresh symlinks so every assistant reads the same instructions.
 ln -sfn ../AGENTS.md .github/copilot-instructions.md
+ln -sfn ../AGENTS.md .claude/CLAUDE.md
+ln -sfn AGENTS.md CLAUDE.md
 ln -sfn ../AGENTS.md .gemini/GEMINI.md
 ln -sfn AGENTS.md GEMINI.md
 ln -sfn AGENTS.md QWEN.md

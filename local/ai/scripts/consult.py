@@ -58,6 +58,7 @@ TOTAL_TIMEOUT = 120  # seconds
 # Значения по умолчанию можно переопределить переменными окружения.
 # Default command templates can be overridden via env vars (AI_CMD_NAME).
 DEFAULT_CMD_TEMPLATES: Dict[str, str] = {
+    "claude": os.environ.get("AI_CMD_CLAUDE", "claude -p --output-format json"),
     "gemini": os.environ.get("AI_CMD_GEMINI", "gemini --json"),
     "qwen": os.environ.get("AI_CMD_QWEN", "qwen --json"),
     "codex": os.environ.get("AI_CMD_CODEX", "codex exec --json"),
@@ -274,7 +275,7 @@ def main() -> None:
         "-a",
         "--assistants",
         required=True,
-        help="Список ассистентов через запятую (gemini,qwen,...) / comma-separated",
+        help="Список ассистентов через запятую (claude,gemini,qwen,...) / comma-separated",
     )
     exec_parser.add_argument(
         "-p",
@@ -296,4 +297,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

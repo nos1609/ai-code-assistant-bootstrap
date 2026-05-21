@@ -3,8 +3,8 @@
 ## По умолчанию / Default
 - RU: Коротко и по делу.
   EN: Be concise and actionable.
-- RU: Предпочитать короткие списки, избегать длинной прозы.
-  EN: Prefer short bullet lists; avoid long prose.
+- RU: Использовать короткие списки; длинную прозу не писать.
+  EN: Use short bullet lists; do not write long prose.
 - RU: Команды/пути/идентификаторы оформлять моноширинным кодом.
   EN: Format commands/paths/identifiers as monospace code.
 - RU: Избегать лишних вводных; начинать с сути и результата.
@@ -25,6 +25,8 @@
   EN: Suggest the next verification step (tests/checks) if applicable.
 
 ## Мини-чеклист сдачи / Delivery mini-checklist
+- RU: Перед ответом убедиться, что запрос уже записан в `requests.log` (hard‑gate).
+  EN: Before replying, confirm the request is already logged in `requests.log` (hard gate).
 - RU: Указать изменённые файлы с привязкой к строкам (`path:line`), если это помогает проверке.
   EN: List changed files with line anchors (`path:line`) when it helps review.
 - RU: Если запускались проверки/скрипты — указать какие; если не запускались — явно сказать почему.

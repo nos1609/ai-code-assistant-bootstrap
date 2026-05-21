@@ -8,8 +8,8 @@
 ## Сигнал и ускоренный старт / Trigger & accelerated start
 - RU: Если есть `AGENTS.md` и `local/ai/chat_context.md` — выполнить порядок чтения из `AGENTS.md` (раздел “Reading order”).
   EN: If `AGENTS.md` and `local/ai/chat_context.md` exist, follow the reading order in `AGENTS.md` (“Reading order” section).
-- RU: Если `local/ai/bootstrap.ready` начинается с `true` и в `local/ai/chat_context.md` статус `completed` — bootstrap можно не повторять (коротко подтвердить).
-  EN: If `local/ai/bootstrap.ready` starts with `true` and `local/ai/chat_context.md` says `completed`, you may skip re-running bootstrap (briefly confirm).
+- RU: Если `local/ai/bootstrap.ready` начинается с `true` и в `local/ai/chat_context.md` статус `completed` — bootstrap не запускать повторно; коротко подтвердить пропуск.
+  EN: If `local/ai/bootstrap.ready` starts with `true` and `local/ai/chat_context.md` says `completed`, do not re-run bootstrap; briefly confirm you are skipping it.
 - RU: При пропуске bootstrap убедиться, что `last_verified_at` и `agents_md_hash` в chat context актуальны; иначе — перепроверить bootstrap.
   EN: When skipping bootstrap, ensure `last_verified_at` and `agents_md_hash` in chat context are up to date; otherwise re-run bootstrap checks.
 
@@ -24,8 +24,8 @@
       EN: If the repo already has extra instructions (for example, `README.md`, `README.en.md`), read and follow them.
 - [ ] RU: Проверить, git-репозиторий ли это (наличие `.git/info/exclude`).
       EN: Confirm whether this is a git repo (so `.git/info/exclude` exists).
-- [ ] RU: Уточнить, куда можно писать (дефолт: `tmp/ai/**` только для экспериментов).
-      EN: Confirm allowed write paths (default: `tmp/ai/**` for experiments only).
+- [ ] RU: Уточнить, куда разрешено писать. Без явного разрешения писать только в `tmp/ai/**` (и только для артефактов/экспериментов).
+      EN: Confirm where writes are allowed. Without explicit permission, write only under `tmp/ai/**` (artifacts/experiments only).
 - [ ] RU: Поприветствовать пользователя и уточнить задачу, не переспрашивая уже зафиксированное.
       EN: Greet the user and clarify the task without re-asking what is already fixed.
 
@@ -38,18 +38,23 @@
   - EN: Re-read `local/ai/chat_context.md`; verify `status`, `last_verified_at`, `agents_md_hash`.
   - RU: В ответе указать дату/время последнего чтения `local/ai/chat_context.md`.
     EN: In the reply, state when `local/ai/chat_context.md` was last reviewed.
+  - RU: Проверить, что язык зафиксирован; после интеграции внутренние файлы вести только на выбранном пользователем языке (см. `local/ai/agents/12-general.md`).
+  - EN: Confirm the language is set; after integration, write internal files only in the user-selected language (see `local/ai/agents/12-general.md`).
 - [ ] Step 1a:
   - RU: Запустить `local/ai/scripts/bootstrap_check.ps1` (или `local/ai/scripts/bootstrap_check.sh`).
   - EN: Run `local/ai/scripts/bootstrap_check.ps1` (or `local/ai/scripts/bootstrap_check.sh`).
+- [ ] Step 1b (pre‑reply logging):
+  - RU: Перед КАЖДЫМ ответом: сначала записать запрос в `requests.log`, затем отвечать.
+  - EN: Before EVERY reply: log the request in `requests.log` first, then respond.
+  - RU: Если запись не создана — остановиться и залогировать сначала.
+  - EN: If the entry does not exist, stop and log first.
 - RU: Если bootstrap_check недоступен — перечислить ручные проверки: README сниппет, instruction files/symlinks, `.git/info/exclude`, логи.
   EN: If bootstrap_check is unavailable, list the equivalent manual checks: README snippet, instruction files/symlinks, `.git/info/exclude`, logs.
 - RU: При интеграции/обновлении шаблона проверить, что `.git/info/exclude` соответствует блоку `.gitignore` `BEGIN/END EXCLUDE LIST`.
   EN: When integrating/updating the template, verify `.git/info/exclude` matches the `.gitignore` `BEGIN/END EXCLUDE LIST` block.
 - [ ] Step 2 (README rule):
-  - RU: Следовать P0 правилу из `AGENTS.md`: не копировать и не перезаписывать `README.md` / `README.en.md`.
-  - EN: Follow the P0 rule in `AGENTS.md`: do not copy/overwrite `README.md` / `README.en.md`.
-  - RU: Если README есть — добавить только скрытый сниппет из `README_snippet.md` (если политика разрешает).
-  - EN: If README exists, only add the hidden snippet from `README_snippet.md` (if policy allows).
+  - RU: Следовать P0 правилу из `AGENTS.md`: при переносе/обновлении шаблона запрещено изменять `README.md` / `README.en.md` любым образом, кроме добавления точного скрытого сниппета из `README_snippet.md` в самое начало (если политика разрешает).
+  - EN: Follow the P0 rule in `AGENTS.md`: when applying/updating the template, DO NOT modify `README.md` / `README.en.md` in any way except inserting the exact hidden snippet from `README_snippet.md` at the very top (if policy allows).
   - RU: Если README нет — создать минимальный README и вставить сниппет (не копировать шаблонный текст).
   - EN: If no README, create a minimal README and insert the snippet (do not copy template text).
 - [ ] Step 3 (instruction links):
@@ -57,15 +62,15 @@
   - EN: Ensure instruction links/files point to `AGENTS.md`.
   - `local/ai/agents/06-instructions.md` (список обязательных файлов).
   - RU: Windows: симлинки могут требовать Admin/Developer Mode; если симлинки недоступны — использовать hardlink (без копирования, чтобы не было дрейфа).
-  - EN: Windows: symlinks may require Admin/Developer Mode; if symlinks are unavailable, use hardlinks (no copies to avoid drift).
+  - EN: Windows: symlinks require Admin/Developer Mode; if symlinks are unavailable, use hardlinks (no copies to avoid drift).
 - [ ] Step 4 (exclude):
   - RU: Скопировать строки блока `.gitignore` `BEGIN/END EXCLUDE LIST` в `.git/info/exclude`.
   - EN: Copy `.gitignore` `BEGIN/END EXCLUDE LIST` entries into `.git/info/exclude`.
 - [ ] Step 5 (logs):
   - RU: Проверить `local/ai/<assistant>/{sessions.log,requests.log}` (JSONL, ISO8601Z).
   - EN: Ensure `local/ai/<assistant>/{sessions.log,requests.log}` exist (JSONL, ISO8601Z).
-  - RU: Для `gemini`, `qwen`, `codex`, `copilot` — при необходимости создать каталоги и файлы логов до первой записи.
-    EN: For `gemini`, `qwen`, `codex`, `copilot`, create log directories/files before the first write if missing.
+  - RU: Для `gemini`, `qwen`, `codex`, `copilot`, `claude` — если каталогов/файлов логов нет, создать их до первой записи.
+    EN: For `gemini`, `qwen`, `codex`, `copilot`, `claude`, create log directories/files before the first write if missing.
 - [ ] Step 6 (record):
   - RU: Зафиксировать итоги в `local/ai/session_history.md`.
   - EN: Record key outcomes in `local/ai/session_history.md`.

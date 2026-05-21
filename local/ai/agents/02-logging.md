@@ -1,6 +1,8 @@
 # Логирование / Logging
 
 ## Правила / Rules
+- RU: **Hard‑gate:** перед КАЖДЫМ ответом обязательно создать запись в `requests.log` отдельной командой. Ответ запрещён, пока запись не создана.
+  EN: **Hard gate:** before EVERY reply, create a `requests.log` entry via a separate command. Do not reply until the entry exists.
 - RU: Формат JSONL (1 событие = 1 строка).
   EN: JSONL format (1 event = 1 line).
 - RU: Таймстемпы: ISO 8601 UTC (`YYYY-MM-DDTHH:MM:SSZ`).
@@ -17,8 +19,8 @@
 - `requests.log`: `timestamp`, `request_id`, `assistant`, `short_context`, `tools`, `status`
 
 ## Примечания / Notes
-- RU: В шаблоне допустимы плейсхолдеры; в реальных сессиях пишем реальные таймстемпы.
-  EN: Placeholders are OK in the template; real sessions must write real timestamps.
+- RU: В шаблоне разрешены плейсхолдеры; в реальных сессиях всегда писать реальные таймстемпы.
+  EN: Placeholders are allowed in the template; always write real timestamps in real sessions.
 
 ## Логирование обращений / Logging Requests
 - **RU:** Определяй цель ведения логов (отладка, аудит, метрики) и фиксируй её в документации перед включением сбора.
@@ -28,22 +30,18 @@
 - **RU:** Структура JSONL: `sessions.log` — `session_id`, `started_at`, `assistant`, `language`, `gender`, `logging_precision`; `requests.log` — `timestamp` (ISO 8601 UTC), `request_id`, `assistant`, `tools`, `status`, опционально `error_details`/`short_context`.
   **EN:** JSONL fields: `sessions.log` — `session_id`, `started_at`, `assistant`, `language`, `gender`, `logging_precision`; `requests.log` — `timestamp` (ISO 8601 UTC), `request_id`, `assistant`, `tools`, `status`, optional `error_details`/`short_context`.
 - **RU:** `started_at` допускается хранить как `timestamp` старта сессии (одно и то же значение, ISO 8601 UTC).
-  **EN:** You may store `started_at` as the session-start `timestamp` (same value, ISO 8601 UTC).
-- **RU:** `local/ai/project_addenda.md` можно использовать как мастер-шаблон: матрица окружений (ОС/права/инструменты), разрешённые/запрещённые действия, детализация логов и места хранения токенов/CLI-настроек.
-  **EN:** You may use `local/ai/project_addenda.md` as a “master template”: environment matrix (OS/permissions/tools), allowed/disallowed actions, logging detail level, and token/tool config locations.
+  **EN:** Store `started_at` as the session-start `timestamp` (same value, ISO 8601 UTC).
+- **RU:** `local/ai/project_addenda.md` использовать как мастер-шаблон: матрица окружений (ОС/права/инструменты), разрешённые/запрещённые действия, детализация логов и места хранения токенов/CLI-настроек.
+  **EN:** Use `local/ai/project_addenda.md` as a “master template”: environment matrix (OS/permissions/tools), allowed/disallowed actions, logging detail level, and token/tool config locations.
 - **RU:** После подтверждения рабочего языка и рода фиксируй старт сессии: создавай запись в журнале `local/ai/<имя ассистента>/sessions.log` (или аналогичном файле) с уникальным идентификатором, временем начала, выбранным языком, родом и, при hand-off, полями `handoff_from`/`handoff_to`.
   **EN:** After confirming language and grammatical gender, capture the session start: write an entry to `local/ai/<assistant-name>/sessions.log` (or equivalent) with a unique ID, start time, chosen language, gender, and `handoff_from`/`handoff_to` when passing work between assistants.
 - **RU:** Если каталог `local/ai/<имя ассистента>` или нужные файлы отсутствуют, создай их перед первой записью, сохраняя структуру репозитория.
   **EN:** If `local/ai/<assistant-name>` or the required log files are missing, create them before the first entry while keeping the repository structure.
-- **RU:** Если логирование активно, в первом ответе автоматически запроси явное разрешение на запись точных отметок времени или длительности обработки; при отказе веди только базовые журналы.
-  **EN:** When logging is enabled, ask for explicit approval in the first reply before recording precise timestamps or processing durations; if refused, keep only baseline logs.
-- **RU:** Для записи точных отметок времени отдельных запросов или длительности обработки получи подтверждение пользователя и зафиксируй его в `local/ai/chat_context.md` перед расширением логов.
-  **EN:** Before logging per-request timestamps or processing durations, capture the user’s approval and record it in `local/ai/chat_context.md`.
 - **RU:** Записи в `sessions.log` и `requests.log` веди в формате JSONL (одна запись на строку) с ISO 8601 UTC `timestamp`; добавляй поле `summary`/`short_context`, отражающее цель сессии или суть запроса.
   **EN:** Keep `sessions.log` and `requests.log` as JSONL (one entry per line) with ISO 8601 UTC timestamps; include a `summary`/`short_context` field capturing the session purpose or request intent.
 - **RU:** При полученном согласии фиксируй КАЖДОЕ обращение к ассистенту в `local/ai/<имя ассистента>/requests.log`: используй отметку времени в ISO 8601 (UTC), идентификатор или тип обращения, краткий контекст (1-2 фразы), пометку об инструментах и итоговый статус (`success`, `warning`, `error`). Придерживайся ASCII и не записывай чувствительные данные.
   **EN:** With consent, log EVERY interaction in `local/ai/<assistant-name>/requests.log`: include an ISO 8601 UTC timestamp, interaction ID/type, a 1-2 sentence context, tools used, and a final status (`success`, `warning`, `error`). Stick to ASCII and omit sensitive data.
-- **RU:** Используй таблицу ниже как шпаргалку по файлам и полям; при необходимости расширяй её проектными полями (`duration_ms`, `error_details_redacted` и т.п.), фиксируя изменения в `local/ai/chat_context.md`.
+- **RU:** Используй таблицу ниже как шпаргалку по файлам и полям. Если проект требует дополнительных полей (`duration_ms`, `error_details_redacted` и т.п.) — добавь их и зафиксируй изменения в `local/ai/chat_context.md`.
   **EN:** Use the table below as a cheat sheet for files and fields; extend it with project-specific columns (`duration_ms`, `error_details_redacted`, etc.) and record changes in `local/ai/chat_context.md`.
 
 | Событие / Event | Файл / File | Обязательные поля / Required fields |

@@ -12,15 +12,21 @@
 ## Эскалация / Escalation
 - RU: 1 предложение-обоснование + список команд (по строке) + ожидаемый результат.
   EN: 1-sentence justification + per-line command list + expected outcome.
-- RU: Если нужно несколько команд/инструментов — согласовать единым запросом весь список команд (по строке), затем выполнять по порядку.
+- RU: Если требуется несколько команд/инструментов — согласуй единым запросом весь список команд (по строке), затем выполняй по порядку.
   EN: If multiple commands/tools are needed, align once on the full per-line command list, then execute sequentially.
+- RU: Windows: перед любыми утверждениями “sudo не существует/не работает” ОБЯЗАТЕЛЬНО проверить факты командой `Get-Command sudo` и/или `sudo -h`. Запрещено спорить без проверки.
+  EN: Windows: before claiming “sudo does not exist/does not work”, you MUST verify with `Get-Command sudo` and/or `sudo -h`. Arguing without checking is forbidden.
+- RU: Windows: если `sudo` доступен, считать его основным механизмом эскалации (UAC prompt). Запрещено запускать `sudo` без явного запроса/согласия пользователя на повышение прав; факт эскалации зафиксировать в `local/ai/chat_context.md`.
+  EN: Windows: if `sudo` is available, treat it as the primary elevation mechanism (UAC prompt). You MUST NOT run `sudo` unless the user explicitly requests/approves elevation; record the elevation event in `local/ai/chat_context.md`.
+- RU: Справка: `https://learn.microsoft.com/en-us/windows/advanced-settings/sudo/`, `https://devblogs.microsoft.com/commandline/introducing-sudo-for-windows/`.
+  EN: Reference: `https://learn.microsoft.com/en-us/windows/advanced-settings/sudo/`, `https://devblogs.microsoft.com/commandline/introducing-sudo-for-windows/`.
 
 ## Типовые ошибки / Common errors
-- RU: `EACCES` — недостаточно прав/запрещена запись; согласовать эскалацию или изменить подход (hardlink вместо symlink, другой каталог).
+- RU: `EACCES` — недостаточно прав/запрещена запись; согласуй эскалацию или измени подход (hardlink вместо symlink, другой каталог).
   EN: `EACCES` — insufficient permissions/write blocked; align on escalation or change the approach (hardlinks instead of symlinks, different directory).
-- RU: `ECONNREFUSED` / `EAI_AGAIN` — сетевые ограничения/проблемы DNS; согласовать повтор и зафиксировать ограничения.
+- RU: `ECONNREFUSED` / `EAI_AGAIN` — сетевые ограничения/проблемы DNS; согласуй повтор и зафиксируй ограничения.
   EN: `ECONNREFUSED` / `EAI_AGAIN` — network/DNS issues; align on retry and record constraints.
-- RU: `401/403` — проблема с токеном/правами; перепроверить источник токена с пользователем.
+- RU: `401/403` — проблема с токеном/правами; перепроверь источник токена с пользователем.
   EN: `401/403` — token/permissions issue; re-check token source with the user.
 
 ## Очистка / Cleanup
@@ -36,8 +42,8 @@
   EN: If tokens/keys are required, do not guess their location; ask the user and follow `local/ai/project_addenda.md` if present.
 
 ## Шаблонные temp dirs / Template temp dirs
-- RU: Если инструмент требует “домашний каталог”/кеш, направлять его в `tmp/ai/**` (пример: `tmp/ai/gemini_home`, `tmp/ai/qwen_home`, `tmp/ai/copilot_home`, `tmp/ai/cli_tokens`) и затем очищать.
-  EN: If a tool needs a “home dir”/cache, route it under `tmp/ai/**` (example: `tmp/ai/gemini_home`, `tmp/ai/qwen_home`, `tmp/ai/copilot_home`, `tmp/ai/cli_tokens`) and clean up afterwards.
+- RU: Если инструмент требует “домашний каталог”/кеш, направлять его в `tmp/ai/**` (пример: `tmp/ai/gemini_home`, `tmp/ai/qwen_home`, `tmp/ai/copilot_home`, `tmp/ai/claude_home`, `tmp/ai/cli_tokens`) и затем очищать.
+  EN: If a tool needs a “home dir”/cache, route it under `tmp/ai/**` (example: `tmp/ai/gemini_home`, `tmp/ai/qwen_home`, `tmp/ai/copilot_home`, `tmp/ai/claude_home`, `tmp/ai/cli_tokens`) and clean up afterwards.
 
 ## Матрица поведения / Behavior matrix
 - RU: `read-only` — только чтение, без записей/сети/установок/тестов с файловым выводом.

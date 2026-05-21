@@ -8,8 +8,8 @@
 ## Что фиксировать при сверке / What to record during an upstream check
 - RU: ISO-время проверки, какие файлы/разделы сравнивались, и что решили делать дальше.
   EN: ISO timestamp, what files/sections were compared, and the decision/next steps.
-- RU: Хэш `AGENTS.md` (и при необходимости ключевых модулей) на момент сверки.
-  EN: Hash of `AGENTS.md` (and key modules if needed) at the time of the check.
+- RU: Хэш `AGENTS.md` на момент сверки. Если используются ключевые модули — хешировать их тоже.
+  EN: Hash `AGENTS.md` at the time of the check. If key modules are in use, hash them too.
 - RU: Не перезаписывать локальные расширения в целевой репе; помечать их как локальные.
   EN: Do not overwrite local extensions in the target repo; mark them as local additions.
 

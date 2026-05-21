@@ -14,20 +14,20 @@
 ## Двуязычие / Bilingual
 - RU: RU/EN обновлять синхронно; EN писать нормальным английским (не калькой).
   EN: Update RU/EN in sync; write EN as natural English (not a literal calque).
-- RU: По согласованию можно вести внутренние файлы на одном языке (RU или EN) ради экономии контекста; зафиксировать выбор в `local/ai/chat_context.md`.
-  EN: With agreement, internal files may be single-language (RU or EN) to save context; record the choice in `local/ai/chat_context.md`.
+- RU: После интеграции и фиксации языка в `local/ai/chat_context.md` внутренние файлы вести только на выбранном пользователем языке (RU или EN) — это снижает расход контекста и исключает дрейф смыслов.
+  EN: After integration and once the language is set in `local/ai/chat_context.md`, write internal files only in the user-selected language (RU or EN) to reduce context usage and avoid semantic drift.
 
 ## Планирование / Planning
 - RU: Для нетривиальных задач составлять план и обновлять его по мере выполнения.
   EN: For non-trivial tasks, create a plan and update it as you execute.
 
 ## Поиск/аудит / Search & audit
-- RU: При необходимости отключать влияние `.gitignore` на поиск/аудит (пример: `rg --hidden --no-ignore`).
-  EN: When needed, disable `.gitignore` filtering during search/audit (example: `rg --hidden --no-ignore`).
+- RU: При поиске/аудите отключать влияние `.gitignore`, если оно скрывает релевантные файлы (пример: `rg --hidden --no-ignore`).
+  EN: During search/audit, disable `.gitignore` filtering if it hides relevant files (example: `rg --hidden --no-ignore`).
 
 ## Контракты файлов / File contract
 - RU: `local/ai/chat_context.md` должен содержать как минимум: системные указания, quick profile (язык/род/окружение/CLI/logging), и статус готовности bootstrap.
-  EN: `local/ai/chat_context.md` should contain at least: system directives, a quick profile (language/gender/environment/CLI/logging), and bootstrap readiness status.
+  EN: `local/ai/chat_context.md` must contain at least: system directives, a quick profile (language/gender/environment/CLI/logging), and bootstrap readiness status.
 - RU: Чек‑лист для `local/ai/session_summaries/<ISO8601>.md` держать в `local/ai/agents/09-closure.md`.
   EN: Keep the checklist for `local/ai/session_summaries/<ISO8601>.md` in `local/ai/agents/09-closure.md`.
 
@@ -46,9 +46,9 @@
   EN: Use search/diff tools as soon as they’re available to quickly locate past agreements.
 
 ## Деструктивные действия / Destructive actions
-- RU: Предпочитать точечные правки; деструктивные команды (например, `git reset --hard`) запрещены без прямого запроса.
-  EN: Prefer targeted edits; destructive commands (for example, `git reset --hard`) are forbidden unless explicitly requested.
+- RU: Делать только точечные правки; деструктивные команды (например, `git reset --hard`) запрещены без прямого запроса.
+  EN: Make only targeted edits; destructive commands (for example, `git reset --hard`) are forbidden unless explicitly requested.
 
 ## Формат файлов / File format
-- RU: Если проект явно не требует Unicode, по возможности держать файлы в ASCII.
-  EN: If the project does not require Unicode, prefer ASCII when possible.
+- RU: Держать файлы в ASCII, если проект явно не требует Unicode.
+  EN: Keep files in ASCII unless the project explicitly requires Unicode.

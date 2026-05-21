@@ -7,14 +7,16 @@
 ## P0 rules / P0 правила
 - RU: Сначала прочитай `local/ai/chat_context.md` — это источник истины по договорённостям сессии.
   EN: Read `local/ai/chat_context.md` first; it is the source of truth for session agreements.
+- RU: **Hard‑gate логирования:** перед КАЖДЫМ ответом обязательно создать запись в `local/ai/<assistant>/requests.log` отдельной командой. Ответ запрещён, пока записи нет.
+  EN: **Logging hard gate:** before EVERY reply, you MUST append an entry to `local/ai/<assistant>/requests.log` via a separate command. Do not reply until it exists.
 - RU: Артефакты/эксперименты писать только в `tmp/ai/**` (и никуда больше) без явного запроса.
   EN: Write artifacts/experiments only under `tmp/ai/**` (and nowhere else) unless explicitly asked.
-- RU: Интеграция шаблона: не копируй и не перезаписывай `README.md` / `README.en.md`; максимум — добавить скрытый сниппет из `README_snippet.md` (если политика разрешает).
-  EN: Template integration: do not copy/overwrite `README.md` / `README.en.md`; at most add the hidden snippet from `README_snippet.md` (if policy allows).
-- RU: Предпочитай `.git/info/exclude` (список берём из блока `BEGIN/END EXCLUDE LIST` в `.gitignore`), а не правку `.gitignore` целевого репозитория.
-  EN: Prefer `.git/info/exclude` (copy entries from the `.gitignore` `BEGIN/END EXCLUDE LIST` block) instead of editing the target repo `.gitignore`.
-- RU: Windows: симлинки могут требовать Admin/Developer Mode; если недоступно — использовать hardlink (без копий, чтобы не было дрейфа).
-  EN: Windows: symlinks may require Admin/Developer Mode; if unavailable, use hardlinks (no copies to avoid drift).
+- RU: Интеграция шаблона: при переносе/обновлении шаблонных инструкций запрещено изменять `README.md` / `README.en.md` любым образом, кроме добавления в самое начало точного скрытого сниппета из `README_snippet.md` (если политика разрешает). Любые другие изменения README запрещены, кроме явно запрошенных пользователем изменений README для нужд проекта.
+  EN: Template integration: when applying/updating template instructions, DO NOT modify `README.md` / `README.en.md` in any way except inserting the exact hidden snippet from `README_snippet.md` at the very top (if policy allows). All other README changes are FORBIDDEN unless the user explicitly requests README edits for the project.
+- RU: Используй `.git/info/exclude` (строки брать из блока `BEGIN/END EXCLUDE LIST` в `.gitignore`). Правка `.gitignore` целевого репозитория запрещена.
+  EN: Use `.git/info/exclude` (copy entries from the `.gitignore` `BEGIN/END EXCLUDE LIST` block). Editing the target repo `.gitignore` is forbidden.
+- RU: Windows: для симлинков требуется Admin/Developer Mode; если симлинки недоступны — используй hardlink (копии запрещены, чтобы не было дрейфа).
+  EN: Windows: symlinks require Admin/Developer Mode; if symlinks are unavailable, use hardlinks (no copies to avoid drift).
 - RU: Не создавать тестовые папки в корне репозитория; для проверок использовать `tmp/ai/**`.
   EN: Do not create test folders in the repo root; use `tmp/ai/**` for tests.
 

@@ -7,9 +7,11 @@
 # чтобы спрятать служебные артефакты без изменений `.gitignore` проекта:
 # BEGIN EXCLUDE LIST (for .git/info/exclude)
 # .gemini/
+# .claude/
 # .github/copilot-instructions.md
 # .qwen/
 # AGENTS.md
+# CLAUDE.md
 # GEMINI.md
 # local/ai/
 # QWEN.md
