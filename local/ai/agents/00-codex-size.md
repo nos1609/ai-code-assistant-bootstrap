@@ -10,8 +10,8 @@
   EN: Keep root `AGENTS.md` as the session contract (P0) + reading order, without long tables/FAQ.
 - RU: `AGENTS.override.md` тоже под тем же лимитом — держать коротким (дельты + ссылки).
   EN: `AGENTS.override.md` has the same limit — keep it short (deltas + links).
-- RU: Для областей/подпапок допустимы `subdir/AGENTS.md` с локальными правилами.
-  EN: For sub-areas, `subdir/AGENTS.md` files are OK for local rules.
+- RU: Для областей/подпапок использовать `subdir/AGENTS.md` для локальных правил.
+  EN: For sub-areas, use `subdir/AGENTS.md` files for local rules.
 
 ## Ссылки / Links
 - Docs: https://developers.openai.com/codex/guides/agents-md

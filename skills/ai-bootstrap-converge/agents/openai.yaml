@@ -1,0 +1,12 @@
+interface:
+  display_name: "AI Bootstrap Converge"
+  short_description: "Converge repos to AI bootstrap."
+  default_prompt: "Use $ai-bootstrap-converge to audit and converge this repository to the AI bootstrap scaffold."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "openaiDeveloperDocs"
+      description: "OpenAI Docs MCP server"
+      transport: "streamable_http"
+      url: "https://developers.openai.com/mcp"
