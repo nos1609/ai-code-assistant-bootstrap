@@ -1,9 +1,6 @@
 ---
-name: Manual report / Ручное сообщение
-about: Use when the structured bug or template-change forms do not fit.
-title: "template: "
-labels: ""
-assignees: ""
+name: General report
+about: Report a reproducible problem or propose a focused template change.
 ---
 
 ## Summary / Суть
