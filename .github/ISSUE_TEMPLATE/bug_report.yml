@@ -1,0 +1,36 @@
+name: Bug report / Ошибка
+description: Report a reproducible problem in the template.
+title: "bug: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include secrets, private logs, tokens, or personal data.
+
+        Не вставляйте секреты, приватные логи, токены или персональные данные.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Проблема
+      description: What went wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction / Как воспроизвести
+      description: Include commands, paths, OS/shell, and expected result.
+      placeholder: |
+        1. ...
+        2. ...
+        Expected:
+        Actual:
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context / Контекст
+      description: Repository state, assistant CLI, OS, shell, and relevant template files.
+    validations:
+      required: false

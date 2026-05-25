@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Usage question / Вопрос по использованию
+    url: https://github.com/nos1609/ai-code-assistant-bootstrap/discussions
+    about: Use discussions when the report is not a reproducible bug or concrete template change.

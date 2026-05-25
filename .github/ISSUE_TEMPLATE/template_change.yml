@@ -1,0 +1,29 @@
+name: Template change / Изменение шаблона
+description: Propose a focused change to the bootstrap template.
+title: "template: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keep the proposal focused. Do not include secrets or private local paths unless they are placeholders.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal / Цель
+      description: What should the template do differently?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope / Область
+      description: Which files or assistant flows are affected?
+    validations:
+      required: true
+  - type: textarea
+    id: checks
+    attributes:
+      label: Checks / Проверки
+      description: How should this be verified?
+    validations:
+      required: false
