@@ -32,6 +32,11 @@
 - Линтеры и базовые проверки — в CI.
 - Сверяйтесь с таблицей `Checks and Tooling` в [AGENTS.md](AGENTS.md) и актуализируйте команды в `local/ai/project_addenda.md`.
 
+## CodeRabbit
+- PR в этот репозиторий автоматически проверяет CodeRabbit по [.coderabbit.yaml](.coderabbit.yaml).
+- Замечания по drift шаблона, секретам, runtime-логам, приватным путям и временным артефактам считайте обязательными к разбору до merge.
+- Если CodeRabbit просит изменить правила шаблона, сначала сверяйте предложение с [AGENTS.md](AGENTS.md), `local/ai/agents/*.md` и текущими договорённостями проекта.
+
 ## Перед выпуском PR
 - Пройдите «Assistant PR Checklist» из [AGENTS.md](AGENTS.md) и убедитесь, что RU/EN документация синхронизирована, а журналы обновлены.
 

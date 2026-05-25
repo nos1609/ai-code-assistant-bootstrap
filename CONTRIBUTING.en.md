@@ -31,6 +31,11 @@ Required workflow:
 - Linters and basic checks run in CI.
 - Consult the `Checks and Tooling` matrix in [AGENTS.md](AGENTS.md) and keep concrete commands in `local/ai/project_addenda.md` up to date.
 
+## CodeRabbit
+- PRs in this repository are reviewed automatically by CodeRabbit using [.coderabbit.yaml](.coderabbit.yaml).
+- Treat comments about template drift, secrets, runtime logs, private paths, and temporary artifacts as mandatory to resolve or explicitly justify before merge.
+- If CodeRabbit suggests changing template rules, first compare the suggestion against [AGENTS.md](AGENTS.md), `local/ai/agents/*.md`, and the current project agreements.
+
 ## Pre-PR checklist
 - Walk through the “Assistant PR Checklist” in [AGENTS.md](AGENTS.md), ensuring RU/EN docs stay in sync and logs are up to date.
 

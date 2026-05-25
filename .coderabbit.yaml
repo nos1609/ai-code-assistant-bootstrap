@@ -1,0 +1,77 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "ru-RU"
+tone_instructions: "Пиши прямо и технически. Сначала риски шаблона, секретов и drift правил."
+early_access: false
+enable_free_tier: true
+inheritance: false
+reviews:
+  profile: "assertive"
+  request_changes_workflow: true
+  high_level_summary: true
+  high_level_summary_instructions: "Сводка должна отдельно подсвечивать изменения шаблона, риск drift от эталонных инструкций и выполненные/нужные проверки."
+  review_status: true
+  review_details: false
+  poem: false
+  enable_prompt_for_ai_agents: false
+  path_instructions:
+    - path: "**/*"
+      instructions: "Это публичная template repo для AI-assistant bootstrap. Любые изменения оценивай как изменение эталона для будущих целевых репозиториев. Флагуй временные артефакты, реальные рабочие логи, приватные пути, домены, токены, ключи, session dumps, machine-specific state и любые не направленные правки, не связанные с шаблоном."
+    - path: "AGENTS.md"
+      instructions: "Корневой AGENTS.md должен оставаться коротким P0-каркасом. Не допускай раздувания, дублирования модулей из local/ai/agents/*.md и потери правил про tmp/ai, .git/info/exclude, запрет перезаписи README в целевых репозиториях и обязательные проверки."
+    - path: "local/ai/agents/**"
+      instructions: "Модульные инструкции должны оставаться атомарными и согласованными с AGENTS.md. Для локальных правил подпапок использовать subdir/AGENTS.md, а не раздувать корневой файл. Проверяй, что новые требования не конфликтуют с P0 и не заставляют писать runtime-данные вне tmp/ai."
+    - path: "local/ai/**/*.log"
+      instructions: "Tracked log files в этой repo должны быть только template samples. Флагуй любые реальные записи с текущими задачами, приватным контекстом, локальными путями, токенами, URL внутренних сервисов или assistant session dumps."
+    - path: "README.md"
+      instructions: "Русский README должен оставаться синхронизированным с README.en.md по смыслу. При изменении пользовательского поведения, состава шаблона, skill'ов, bootstrap flow или проверок требуй зеркальное обновление английской версии."
+    - path: "README.en.md"
+      instructions: "English README must stay functionally equivalent to README.md. Do not accept translated drift, missing warnings, or missing updates for bootstrap flow, assistant files, skills, and checks."
+    - path: "CONTRIBUTING*.md"
+      instructions: "Правила вклада должны сохранять текущий контракт: Conventional Commits на английском, содержательное тело коммита RU bullets then EN bullets, RU/EN синхронизация docs, focused diff и релевантные проверки перед PR."
+    - path: ".gitignore"
+      instructions: "Эта repo использует .gitignore как источник списка для .git/info/exclude в целевых репозиториях. Флагуй попытки сделать .gitignore обычным runtime ignore, скрыть весь .github или добавить правила, которые мешают отслеживать файлы шаблона."
+    - path: ".github/**"
+      instructions: "GitHub community/PR/issue files публичные. Флагуй приватные контакты, секреты, внутренние URL, противоречия SECURITY.md/CODE_OF_CONDUCT.md и отсутствие предупреждений не публиковать секреты в issues/PR."
+    - path: "skills/ai-bootstrap-converge/**"
+      instructions: "Skill должен приводить целевые репозитории к версии шаблона без тупой перезаписи пользовательских инструкций. Не допускай repo state files, runtime мусор, неявные side effects, несогласованные пути установки skill'а или расхождение с references/*.md. Для скриптов требуй Pester для PowerShell и ShellCheck для shell."
+    - path: "**/*.ps1"
+      instructions: "Проверяй кросс-платформенную безопасность PowerShell: LiteralPath для файловых операций, отсутствие небезопасной сборки команд строками, предсказуемую работу на Windows, и наличие/актуальность Pester-проверок для изменённого поведения."
+    - path: "**/*.sh"
+      instructions: "Проверяй POSIX shell на строгие кавычки, обработку путей с пробелами, set -euo pipefail где уместно, отсутствие destructive операций без guard'ов, и необходимость ShellCheck для изменённых скриптов."
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+    auto_pause_after_reviewed_commits: 0
+chat:
+  art: false
+  auto_reply: true
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "AGENTS.md"
+      - "CONTRIBUTING.md"
+      - "CONTRIBUTING.en.md"
+      - "README.md"
+      - "README.en.md"
+      - "local/ai/agents/*.md"
+      - "skills/ai-bootstrap-converge/SKILL.md"
+      - "skills/ai-bootstrap-converge/references/*.md"
+  pull_requests:
+    scope: "local"
+  issues:
+    scope: "local"
+  learnings:
+    scope: "local"
+  mcp:
+    usage: "disabled"
+code_generation:
+  docstrings:
+    language: "ru-RU"
+  unit_tests: {}
+issue_enrichment:
+  auto_enrich:
+    enabled: false
+  planning:
+    enabled: false
