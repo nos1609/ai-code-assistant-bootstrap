@@ -26,6 +26,7 @@ Plan emits operations without writing. Group results by:
 Apply executes safe operations only:
 
 - create missing managed files;
+- insert/move the required `AGENTS.md` instruction block while preserving existing project rules;
 - create ensure-if-missing files only when absent;
 - insert/move README snippet;
 - append missing exclude lines;

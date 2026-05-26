@@ -50,9 +50,9 @@ function Add-Operation {
 }
 
 function Get-RelativePath([string]$Base, [string]$Path) {
-    $baseUri = [Uri]((Resolve-Path -LiteralPath $Base).Path.TrimEnd('\') + '\')
-    $pathUri = [Uri]((Resolve-Path -LiteralPath $Path).Path)
-    return [Uri]::UnescapeDataString($baseUri.MakeRelativeUri($pathUri).ToString()).Replace('/', '\')
+    $basePath = (Resolve-Path -LiteralPath $Base).Path
+    $targetPath = (Resolve-Path -LiteralPath $Path).Path
+    return [System.IO.Path]::GetRelativePath($basePath, $targetPath).Replace('\', '/')
 }
 
 function Read-Text([string]$Path) {
@@ -162,6 +162,47 @@ function Ensure-ManagedExact {
     }
 }
 
+function Ensure-AgentsInstructions {
+    param([string]$TemplateRoot, [string]$TargetRoot)
+    $relative = "AGENTS.md"
+    $src = Join-Path $TemplateRoot $relative
+    $dst = Join-Path $TargetRoot $relative
+    if (-not (Test-Path -LiteralPath $src -PathType Leaf)) { return }
+
+    if (-not (Test-Path -LiteralPath $dst -PathType Leaf)) {
+        Add-Operation "MISSING" "EnsureAgentsInstructions" $relative "Create from template." $true
+        if ($Mode -eq "Apply") { Copy-FileExact $src $dst }
+        return
+    }
+
+    $templateText = Read-Text $src
+    $targetText = Read-Text $dst
+    if ($targetText.StartsWith($templateText)) {
+        Add-Operation "OK" "EnsureAgentsInstructions" $relative "Required instruction block is already at the top." $false
+        return
+    }
+
+    if ($ForceManagedExact) {
+        Add-Operation "DRIFT" "EnsureAgentsInstructions" $relative "Replace with template because -ForceManagedExact was set." $true
+        if ($Mode -eq "Apply") { Copy-FileExact $src $dst }
+        return
+    }
+
+    if ($targetText.Contains($templateText)) {
+        Add-Operation "DRIFT" "EnsureAgentsInstructions" $relative "Move required instruction block to the top while preserving existing project rules." $true
+        if ($Mode -eq "Apply") {
+            $updated = $targetText.Replace($templateText, "")
+            Write-Text $dst ($templateText.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $updated.TrimStart())
+        }
+        return
+    }
+
+    Add-Operation "MISSING" "EnsureAgentsInstructions" $relative "Insert required instruction block at the top while preserving existing project rules." $true
+    if ($Mode -eq "Apply") {
+        Write-Text $dst ($templateText.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $targetText.TrimStart())
+    }
+}
+
 function Ensure-IfMissing {
     param([string]$TemplateRoot, [string]$TargetRoot, [string]$Relative)
     $src = Join-Path $TemplateRoot $Relative
@@ -240,7 +281,7 @@ function Ensure-ExcludeLines {
         Add-Operation "SKIP" "EnsureExcludeLines" ".git/info/exclude" "Target is not a git worktree or .git is not present." $false
         return
     }
-    $exclude = Join-Path $gitDir "info\exclude"
+    $exclude = Join-Path (Join-Path $gitDir "info") "exclude"
     $existing = @()
     if (Test-Path -LiteralPath $exclude -PathType Leaf) {
         $existing = @(Get-Content -LiteralPath $exclude)
@@ -358,7 +399,7 @@ function Get-InstructionLinks {
         @{ Path = "GEMINI.md"; Target = "AGENTS.md" },
         @{ Path = "QWEN.md"; Target = "AGENTS.md" }
     )
-    $templateHasClaude = (Test-Path -LiteralPath (Join-Path $TemplateRoot ".claude\CLAUDE.md")) -or (Test-Path -LiteralPath (Join-Path $TemplateRoot "CLAUDE.md"))
+    $templateHasClaude = (Test-Path -LiteralPath (Join-Path $TemplateRoot ".claude/CLAUDE.md")) -or (Test-Path -LiteralPath (Join-Path $TemplateRoot "CLAUDE.md"))
     if ($WithClaude -or $templateHasClaude) {
         $links += @{ Path = ".claude/CLAUDE.md"; Target = "../AGENTS.md" }
         $links += @{ Path = "CLAUDE.md"; Target = "AGENTS.md" }
@@ -378,7 +419,7 @@ function Get-EnsureIfMissingFiles {
             $candidates.Add($relative) | Out-Null
         }
     }
-    $localAi = Join-Path $TemplateRoot "local\ai"
+    $localAi = Join-Path $TemplateRoot "local/ai"
     if (Test-Path -LiteralPath $localAi -PathType Container) {
         Get-ChildItem -LiteralPath $localAi -Directory -Force | Where-Object {
             $_.Name -notin @("agents", "scripts", "context_packs", "session_summaries")
@@ -411,7 +452,7 @@ function Report-LocalOnlyTracked {
     $tracked = @(& git -C $TargetRoot ls-files -- $patterns 2>$null)
     foreach ($path in $tracked) {
         if (-not [string]::IsNullOrWhiteSpace($path)) {
-            Add-Operation "DRIFT" "ReportLocalOnlyTracked" $path "Local-only/runtime path is tracked by git; remove from index only after user approval." $false
+            Add-Operation "NEEDS_DECISION" "ReportLocalOnlyTracked" $path "Local-only/runtime path is tracked by git. Remove from index only after explicit user approval." $false
         }
     }
 }
@@ -420,13 +461,13 @@ function Build-Plan {
     param([string]$TargetRoot, [string]$TemplateRoot)
 
     $managedRoots = @(
-        "AGENTS.md",
         "README_snippet.md",
         "local/ai/agents",
         "local/ai/scripts",
         "local/ai/bootstrap.ready",
         "skills/ai-bootstrap-converge"
     )
+    Ensure-AgentsInstructions $TemplateRoot $TargetRoot
     foreach ($src in Get-TemplateFilesByRoots $TemplateRoot $managedRoots) {
         Ensure-ManagedExact $TemplateRoot $TargetRoot (Get-RelativePath $TemplateRoot $src)
     }
@@ -466,7 +507,7 @@ try {
     }
 
     $bad = @($script:Operations | Where-Object {
-        $_.Status -in @("MISSING", "DRIFT", "CONFLICT", "BLOCKED") -and
+        $_.Status -in @("MISSING", "DRIFT", "CONFLICT", "BLOCKED", "NEEDS_DECISION") -and
         -not ($Mode -eq "Apply" -and $_.Safe)
     })
     if ($Mode -eq "Verify" -and $bad.Count -gt 0) {

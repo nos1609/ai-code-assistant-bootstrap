@@ -61,6 +61,7 @@ pwsh -NoProfile -File "$skill\scripts\converge.ps1" -Mode Plan -Target $target -
 ## Operation Semantics
 
 - `EnsureManagedFile`: create missing template-managed files; report conflicts for differing existing files unless force is explicitly requested.
+- `EnsureAgentsInstructions`: create missing `AGENTS.md`, or insert/move the required template instruction block to the top while preserving existing project-owned rules.
 - `EnsureIfMissing`: create placeholder/sample files only when absent.
 - `EnsureSnippetPresent`: patch README files by inserting the exact `README_snippet.md` content at the top.
 - `EnsureExcludeLines`: add required local-only paths to `.git/info/exclude` without deleting unrelated entries.

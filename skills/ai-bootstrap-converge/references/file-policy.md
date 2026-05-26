@@ -4,7 +4,8 @@ Classify target repository files before changing them.
 
 | Class | Paths | Convergence rule |
 | --- | --- | --- |
-| `managed-exact` | `AGENTS.md`, `README_snippet.md`, `local/ai/agents/**`, `local/ai/scripts/**`, `local/ai/bootstrap.ready`, `skills/ai-bootstrap-converge/**` | Required framework. Create when missing. If existing content differs, report conflict unless the user explicitly authorizes forced replacement. |
+| `patch-managed` | `AGENTS.md` | Required root instruction entrypoint. Create when missing. If existing project rules are present, insert/move the template instruction block to the top and preserve the existing body. Exact replacement requires explicit force approval. |
+| `managed-exact` | `README_snippet.md`, `local/ai/agents/**`, `local/ai/scripts/**`, `local/ai/bootstrap.ready`, `skills/ai-bootstrap-converge/**` | Required framework. Create when missing. If existing content differs, report conflict unless the user explicitly authorizes forced replacement. |
 | `discovery-link` | `.agents/skills/ai-bootstrap-converge`, `.claude/skills/ai-bootstrap-converge` | Agent-specific discovery paths. They must be symlinks to `../../skills/ai-bootstrap-converge` when present. Never duplicate skill files here. If symlink creation is unavailable, report it and keep the canonical `skills/**` package only. |
 | `patch-only` | `README.md`, `README.en.md` | Project-owned. Only insert/move the exact hidden snippet from `README_snippet.md` to the top. Never rewrite the body. |
 | `exclude-patch` | `.git/info/exclude` | Local git hygiene. Add required lines from the template `.gitignore` `BEGIN/END EXCLUDE LIST` block plus local runtime paths. Never remove unrelated existing lines. |

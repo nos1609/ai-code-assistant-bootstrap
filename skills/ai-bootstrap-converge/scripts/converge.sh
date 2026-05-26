@@ -110,12 +110,12 @@ template_root=$(resolve_template)
 operations_file=$(mktemp "${TMPDIR:-/tmp}/ai-bootstrap-ops.XXXXXX")
 
 emit() {
-  status=$1
-  type=$2
-  path=$3
-  safe=$4
-  detail=$5
-  printf '%s\t%s\t%s\t%s\t%s\n' "$status" "$type" "$path" "$safe" "$detail" >> "$operations_file"
+  _emit_status=$1
+  _emit_type=$2
+  _emit_path=$3
+  _emit_safe=$4
+  _emit_detail=$5
+  printf '%s\t%s\t%s\t%s\t%s\n' "$_emit_status" "$_emit_type" "$_emit_path" "$_emit_safe" "$_emit_detail" >> "$operations_file"
 }
 
 same_file() {
@@ -141,26 +141,82 @@ ensure_managed_file() {
   [ -f "$src" ] || return 0
   if [ ! -f "$dst" ]; then
     emit "MISSING" "EnsureManagedFile" "$rel" "true" "Create from template."
-    [ "$mode" = "Apply" ] && copy_exact "$src" "$dst"
+    if [ "$mode" = "Apply" ]; then
+      copy_exact "$src" "$dst"
+    fi
   elif same_file "$src" "$dst"; then
     emit "OK" "EnsureManagedFile" "$rel" "false" "Matches template."
   elif [ "$force_managed" -eq 1 ]; then
     emit "DRIFT" "EnsureManagedFile" "$rel" "true" "Replace with template because force was set."
-    [ "$mode" = "Apply" ] && copy_exact "$src" "$dst"
+    if [ "$mode" = "Apply" ]; then
+      copy_exact "$src" "$dst"
+    fi
   else
     emit "CONFLICT" "EnsureManagedFile" "$rel" "false" "Managed file differs; preserve target content and merge manually."
   fi
+  return 0
 }
 
 managed_files() {
-  for rel in AGENTS.md README_snippet.md local/ai/bootstrap.ready; do
-    [ -f "$template_root/$rel" ] && printf '%s\n' "$rel"
+  for rel in README_snippet.md local/ai/bootstrap.ready; do
+    if [ -f "$template_root/$rel" ]; then
+      printf '%s\n' "$rel"
+    fi
   done
   for root in local/ai/agents local/ai/scripts skills/ai-bootstrap-converge; do
     if [ -d "$template_root/$root" ]; then
       (cd "$template_root" && find "$root" -type f | sort)
     fi
   done
+}
+
+ensure_agents_instructions() {
+  rel=AGENTS.md
+  src=$template_root/$rel
+  dst=$target/$rel
+  [ -f "$src" ] || return 0
+  if [ ! -f "$dst" ]; then
+    emit "MISSING" "EnsureAgentsInstructions" "$rel" "true" "Create from template."
+    if [ "$mode" = "Apply" ]; then
+      copy_exact "$src" "$dst"
+    fi
+    return 0
+  fi
+  if awk 'NR==FNR { s=s $0 "\n"; next } { t=t $0 "\n" } END { exit(index(t, s) == 1 ? 0 : 1) }' "$src" "$dst"; then
+    emit "OK" "EnsureAgentsInstructions" "$rel" "false" "Required instruction block is already at the top."
+  elif [ "$force_managed" -eq 1 ]; then
+    emit "DRIFT" "EnsureAgentsInstructions" "$rel" "true" "Replace with template because force was set."
+    if [ "$mode" = "Apply" ]; then
+      copy_exact "$src" "$dst"
+    fi
+  elif awk 'NR==FNR { s=s $0 "\n"; next } { t=t $0 "\n" } END { exit(index(t, s) > 0 ? 0 : 1) }' "$src" "$dst"; then
+    emit "DRIFT" "EnsureAgentsInstructions" "$rel" "true" "Move required instruction block to the top while preserving existing project rules."
+    if [ "$mode" = "Apply" ]; then
+      tmp=$(mktemp "${TMPDIR:-/tmp}/agents.XXXXXX")
+      awk '
+        NR==FNR { s=s $0 "\n"; next }
+        { t=t $0 "\n" }
+        END {
+          pos=index(t, s)
+          if (pos == 0) exit 1
+          after=substr(t, pos + length(s))
+          sub(/^[\r\n]+/, "", after)
+          printf "%s\n\n%s", s, after
+        }
+      ' "$src" "$dst" > "$tmp"
+      mv "$tmp" "$dst"
+    fi
+  else
+    emit "MISSING" "EnsureAgentsInstructions" "$rel" "true" "Insert required instruction block at the top while preserving existing project rules."
+    if [ "$mode" = "Apply" ]; then
+      tmp=$(mktemp "${TMPDIR:-/tmp}/agents.XXXXXX")
+      cat "$src" > "$tmp"
+      printf '\n\n' >> "$tmp"
+      cat "$dst" >> "$tmp"
+      mv "$tmp" "$dst"
+    fi
+  fi
+  return 0
 }
 
 ensure_if_missing() {
@@ -172,13 +228,18 @@ ensure_if_missing() {
     emit "OK" "EnsureIfMissing" "$rel" "false" "Existing project/local file preserved."
   else
     emit "MISSING" "EnsureIfMissing" "$rel" "true" "Create placeholder/sample from template."
-    [ "$mode" = "Apply" ] && copy_exact "$src" "$dst"
+    if [ "$mode" = "Apply" ]; then
+      copy_exact "$src" "$dst"
+    fi
   fi
+  return 0
 }
 
 ensure_if_missing_files() {
   for rel in local/ai/chat_context.md local/ai/project_addenda.md local/ai/session_history.md; do
-    [ -f "$template_root/$rel" ] && printf '%s\n' "$rel"
+    if [ -f "$template_root/$rel" ]; then
+      printf '%s\n' "$rel"
+    fi
   done
   if [ -d "$template_root/local/ai" ]; then
     find "$template_root/local/ai" -mindepth 1 -maxdepth 1 -type d | while IFS= read -r dir; do
@@ -187,7 +248,9 @@ ensure_if_missing_files() {
         agents|scripts|context_packs|session_summaries) continue ;;
       esac
       for file in README.md requests.log sessions.log; do
-        [ -f "$dir/$file" ] && printf 'local/ai/%s/%s\n' "$name" "$file"
+        if [ -f "$dir/$file" ]; then
+          printf 'local/ai/%s/%s\n' "$name" "$file"
+        fi
       done
     done
   fi
@@ -209,7 +272,7 @@ ensure_readme_snippet() {
       cat "$snippet_file" > "$path"
       printf '\n' >> "$path"
     fi
-    return
+    return 0
   fi
   if awk 'NR==FNR { s=s $0 "\n"; next } { t=t $0 "\n" } END { exit(index(t, s) == 1 ? 0 : 1) }' "$snippet_file" "$path"; then
     emit "OK" "EnsureSnippetPresent" "$rel" "false" "Snippet is already at the top."
@@ -240,6 +303,7 @@ ensure_readme_snippet() {
       mv "$tmp" "$path"
     fi
   fi
+  return 0
 }
 
 exclude_lines() {
@@ -270,9 +334,12 @@ ensure_exclude_lines() {
       emit "OK" "EnsureExcludeLines" ".git/info/exclude" "false" "Line present: $line"
     else
       emit "MISSING" "EnsureExcludeLines" ".git/info/exclude" "true" "Append line: $line"
-      [ "$mode" = "Apply" ] && printf '%s\n' "$line" >> "$exclude"
+      if [ "$mode" = "Apply" ]; then
+        printf '%s\n' "$line" >> "$exclude"
+      fi
     fi
   done
+  return 0
 }
 
 link_ok() {
@@ -302,9 +369,15 @@ ensure_instruction_link() {
     emit "MISSING" "EnsureInstructionLink" "$rel" "true" "Create symlink or hardlink to AGENTS.md."
     if [ "$mode" = "Apply" ]; then
       mkdir -p "$(dirname "$path")"
-      ln -s "$rel_target" "$path" 2>/dev/null || ln "$agent" "$path"
+      if ! ln -s "$rel_target" "$path" 2>/dev/null; then
+        rm -f "$path" 2>/dev/null || true
+        if ! ln "$agent" "$path" 2>/dev/null; then
+          emit "BLOCKED" "EnsureInstructionLink" "$rel" "false" "Could not create symlink or hardlink to AGENTS.md."
+        fi
+      fi
     fi
   fi
+  return 0
 }
 
 symlink_ok() {
@@ -332,6 +405,7 @@ ensure_skill_discovery_link() {
       fi
     fi
   fi
+  return 0
 }
 
 instruction_links() {
@@ -359,13 +433,14 @@ report_local_only_tracked() {
     'local/ai/*/requests.log' \
     'local/ai/*/sessions.log' \
     'local/ai/*/*.session' 2>/dev/null | while IFS= read -r path; do
-      [ -n "$path" ] && emit "DRIFT" "ReportLocalOnlyTracked" "$path" "false" "Local-only/runtime path is tracked by git."
+      [ -n "$path" ] && emit "NEEDS_DECISION" "ReportLocalOnlyTracked" "$path" "false" "Local-only/runtime path is tracked by git. Remove from index only after explicit user approval."
     done
 }
 
 snippet_tmp=$(mktemp "${TMPDIR:-/tmp}/ai-bootstrap-snippet.XXXXXX")
 readme_snippet > "$snippet_tmp"
 
+ensure_agents_instructions
 managed_files | while IFS= read -r rel; do ensure_managed_file "$rel"; done
 ensure_if_missing_files | while IFS= read -r rel; do ensure_if_missing "$rel"; done
 ensure_readme_snippet "README.md" "$snippet_tmp"
@@ -391,7 +466,7 @@ else
 fi
 
 if [ "$mode" = "Verify" ]; then
-  if awk -F '\t' '$1 == "MISSING" || $1 == "DRIFT" || $1 == "CONFLICT" || $1 == "BLOCKED" { found=1 } END { exit(found ? 0 : 1) }' "$operations_file"; then
+  if awk -F '\t' '$1 == "MISSING" || $1 == "DRIFT" || $1 == "CONFLICT" || $1 == "BLOCKED" || $1 == "NEEDS_DECISION" { found=1 } END { exit(found ? 0 : 1) }' "$operations_file"; then
     exit 1
   fi
 fi
